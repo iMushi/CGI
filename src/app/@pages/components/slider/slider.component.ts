@@ -4,20 +4,7 @@
 * Copyright Reserved : MIT LICENSE
 * Modified : Ace Revox
 */
-import {
-  forwardRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -30,7 +17,7 @@ import { pluck } from 'rxjs/operators/pluck';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 import { tap } from 'rxjs/operators/tap';
 import { toBoolean } from '../util/convert';
-import { Marks, MarksArray } from './slider-marks.component';
+import { Marks } from './slider-marks.component';
 import { SliderService } from './slider.service';
 
 export type SliderValue = number[] | number;
@@ -42,15 +29,15 @@ export class SliderHandle {
 }
 
 @Component({
-  selector     : 'pg-slider',
+  selector: 'pg-slider',
   encapsulation: ViewEncapsulation.None,
-  providers    : [ {
-    provide    : NG_VALUE_ACCESSOR,
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => pgSliderComponent),
-    multi      : true
-  } ],
-  template     : `
-    <div #slider [ngClass]="classMap" >
+    multi: true
+  }],
+  template: `
+    <div #slider [ngClass]="classMap">
       <div class="pg-slider-rail"></div>
       <pg-slider-track
         ClassName="{{prefixCls}}-track"
@@ -60,12 +47,12 @@ export class SliderHandle {
         [Length]="track.length"
       ></pg-slider-track>
       <pg-slider-step *ngIf="marksArray"
-        PrefixCls="{{prefixCls}}"
-        [Vertical]="Vertical"
-        [LowerBound]="bounds.lower"
-        [UpperBound]="bounds.upper"
-        [MarksArray]="marksArray"
-        [Included]="Included"
+                      PrefixCls="{{prefixCls}}"
+                      [Vertical]="Vertical"
+                      [LowerBound]="bounds.lower"
+                      [UpperBound]="bounds.upper"
+                      [MarksArray]="marksArray"
+                      [Included]="Included"
       ></pg-slider-step>
       <pg-slider-handle
         *ngFor="let handle of handles;"
@@ -77,105 +64,35 @@ export class SliderHandle {
         [TipFormatter]="TipFormatter"
       ></pg-slider-handle>
       <pg-slider-marks *ngIf="marksArray"
-        ClassName="{{prefixCls}}-mark"
-        [Vertical]="Vertical"
-        [Min]="Min"
-        [Max]="Max"
-        [LowerBound]="bounds.lower"
-        [UpperBound]="bounds.upper"
-        [MarksArray]="marksArray"
-        [Included]="Included"
+                       ClassName="{{prefixCls}}-mark"
+                       [Vertical]="Vertical"
+                       [Min]="Min"
+                       [Max]="Max"
+                       [LowerBound]="bounds.lower"
+                       [UpperBound]="bounds.upper"
+                       [MarksArray]="marksArray"
+                       [Included]="Included"
       ></pg-slider-marks>
     </div>
   `,
-  styleUrls    : [
+  styleUrls: [
     './slider.scss'
   ]
 })
 export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
-  _color:string = "";
+  _color: string = "";
   _toolTipForce: boolean;
   // Debugging
   @Input() DebugId: number | string = null; // set this id will print debug informations to console
-
-  // Dynamic property settings
-  @Input()
-  set Disabled(value: boolean) {
-    this._disabled = toBoolean(value);
-  }
-
-  get Disabled(): boolean {
-    return this._disabled;
-  }
-
   // Static configurations (properties that can only specify once)
   @Input() Step = 1;
   @Input() Marks: Marks = null;
   @Input() Min = 0;
   @Input() Max = 100;
   @Input() DefaultValue: SliderValue = null;
-  @Input() Tooltip:boolean = false;
+  @Input() Tooltip: boolean = false;
   @Input() TipFormatter: (value: number) => string;
   @Output() OnAfterChange = new EventEmitter<SliderValue>();
-
-  @Input()
-  set Vertical(value: boolean) {
-    this._vertical = toBoolean(value);
-  }
-
-  get Vertical(): boolean {
-    return this._vertical;
-  }
-
-  @Input()
-  set TooltipForceVisiblity(value: boolean) {
-    //this._showHandleTooltip(this.Range ? this.activeValueIndex : 0);
-    this._toolTipForce = value;
-  }
-
-  @Input()
-  set Range(value: boolean) {
-    this._range = toBoolean(value);
-  }
-
-  get Range(): boolean {
-    return this._range;
-  }
-
-  @Input()
-  set Dots(value: boolean) {
-    this._dots = toBoolean(value);
-  }
-
-  get Dots(): boolean {
-    return this._dots;
-  }
-
-  @Input()
-  set Included(value: boolean) {
-    this._included = toBoolean(value);
-  }
-
-  get Included(): boolean {
-    return this._included;
-  }
-
-  @Input()
-  set Color(value: string) {
-    this._color = value;
-  }
-
-  get Color(): string {
-    return this._color;
-  }
-
-  // Inside properties
-  private _disabled = false;
-  private _dots = false;
-  private _included = true;
-  private _range = false;
-  private _vertical = false;
-
   value: SliderValue = null; // CORE value state
   @ViewChild('slider') slider: ElementRef;
   sliderDOM: HTMLDivElement;
@@ -184,13 +101,12 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
   prefixCls = 'pg-slider';
   classMap: object;
   activeValueIndex: number = null; // Current activated handle's index ONLY for range=true
-  track = { offset: null, length: null }; // Track's offset and length
+  track = {offset: null, length: null}; // Track's offset and length
   handles: SliderHandle[]; // Handles' offset
   marksArray: Marks[]; // "marks" in array type with more data & FILTER out the invalid mark
-  bounds = { lower: null, upper: null }; // now for pg-slider-step
+  bounds = {lower: null, upper: null}; // now for pg-slider-step
   onValueChange: (value: SliderValue) => void; // Used by ngModel. BUG: onValueChange() will not success to effect the "value" variable ( [(ngModel)]="value" ) when the first initializing, except using "nextTick" functionality (MAY angular2's problem ?)
   isDragging = false; // Current dragging state
-
   // Events observables & subscriptions
   dragstart$: Observable<number>;
   dragmove$: Observable<number>;
@@ -198,10 +114,80 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
   dragstart_: Subscription;
   dragmove_: Subscription;
   dragend_: Subscription;
+  // Inside properties
+  private _disabled = false;
+  private _dots = false;
+  private _included = true;
+  private _range = false;
+  private _vertical = false;
+
+  constructor(private utils: SliderService) {
+  }
+
+  get Disabled(): boolean {
+    return this._disabled;
+  }
+
+  // Dynamic property settings
+  @Input()
+  set Disabled(value: boolean) {
+    this._disabled = toBoolean(value);
+  }
+
+  get Vertical(): boolean {
+    return this._vertical;
+  }
+
+  @Input()
+  set Vertical(value: boolean) {
+    this._vertical = toBoolean(value);
+  }
+
+  @Input()
+  set TooltipForceVisiblity(value: boolean) {
+    //this._showHandleTooltip(this.Range ? this.activeValueIndex : 0);
+    this._toolTipForce = value;
+  }
+
+  get Range(): boolean {
+    return this._range;
+  }
+
+  @Input()
+  set Range(value: boolean) {
+    this._range = toBoolean(value);
+  }
+
+  get Dots(): boolean {
+    return this._dots;
+  }
+
+  @Input()
+  set Dots(value: boolean) {
+    this._dots = toBoolean(value);
+  }
+
+  get Included(): boolean {
+    return this._included;
+  }
+
+  @Input()
+  set Included(value: boolean) {
+    this._included = toBoolean(value);
+  }
+
+  get Color(): string {
+    return this._color;
+  }
 
   // |--------------------------------------------------------------------------------------------
   // | value accessors & ngModel accessors
   // |--------------------------------------------------------------------------------------------
+
+  @Input()
+  set Color(value: string) {
+    this._color = value;
+  }
 
   setValue(val: SliderValue, isWriteValue: boolean = false): void {
     if (isWriteValue) { // [ngModel-writeValue]: Formatting before setting value, always update current value, but trigger onValueChange ONLY when the "formatted value" not equals "input value"
@@ -259,19 +245,17 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     this.onValueChange = fn;
   }
 
-  registerOnTouched(fn: () => void): void { }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.Disabled = isDisabled;
-    this.toggleDragDisabled(isDisabled);
-    this.setClassMap();
+  registerOnTouched(fn: () => void): void {
   }
 
   // |--------------------------------------------------------------------------------------------
   // | Lifecycle hooks
   // |--------------------------------------------------------------------------------------------
 
-  constructor(private utils: SliderService) {
+  setDisabledState(isDisabled: boolean): void {
+    this.Disabled = isDisabled;
+    this.toggleDragDisabled(isDisabled);
+    this.setClassMap();
   }
 
   // initialize event binding, class init, etc. (called only once)
@@ -292,13 +276,13 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     this.toggleDragDisabled(this.Disabled);
     // the first time to init classes
     this.setClassMap();
-    if(this._toolTipForce){
+    if (this._toolTipForce) {
       this._showHandleTooltip(this.Range ? this.activeValueIndex : 0);
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const { Disabled, Marks } = changes;
+    const {Disabled, Marks} = changes;
     if (Disabled && !Disabled.firstChange) {
       this.toggleDragDisabled(Disabled.currentValue);
       this.setClassMap();
@@ -317,10 +301,10 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
 
   setClassMap(): void {
     this.classMap = {
-      [this.prefixCls]                : true,
-      [this._color]                : true,
-      [`${this.prefixCls}-disabled`]  : this.Disabled,
-      [`${this.prefixCls}-vertical`]  : this.Vertical,
+      [this.prefixCls]: true,
+      [this._color]: true,
+      [`${this.prefixCls}-disabled`]: this.Disabled,
+      [`${this.prefixCls}-vertical`]: this.Vertical,
       [`${this.prefixCls}-with-marks`]: this.marksArray ? this.marksArray.length : 0
     };
   }
@@ -347,7 +331,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     if (this.Range) {
       // TODO: using type guard, remove type cast
       const newValue = this.utils.cloneArray(this.value as number[]);
-      newValue[ this.activeValueIndex ] = pointerValue;
+      newValue[this.activeValueIndex] = pointerValue;
       this.setValue(newValue);
     } else {
       this.setValue(pointerValue);
@@ -359,26 +343,26 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     const offset = this.getValueToOffset(value);
     const valueSorted = this.getValue(true);
     const offsetSorted = this.getValueToOffset(valueSorted);
-    const boundParts = this.Range ? valueSorted as number[] : [ 0, valueSorted ];
-    const trackParts = this.Range ? [ offsetSorted[ 0 ], offsetSorted[ 1 ] - offsetSorted[ 0 ] ] : [ 0, offsetSorted ];
+    const boundParts = this.Range ? valueSorted as number[] : [0, valueSorted];
+    const trackParts = this.Range ? [offsetSorted[0], offsetSorted[1] - offsetSorted[0]] : [0, offsetSorted];
 
     this.handles.forEach((handle, index) => {
-      handle.offset = this.Range ? offset[ index ] : offset;
-      handle.value = this.Range ? value[ index ] : value;
+      handle.offset = this.Range ? offset[index] : offset;
+      handle.value = this.Range ? value[index] : value;
     });
-    [ this.bounds.lower, this.bounds.upper ] = boundParts;
-    [ this.track.offset, this.track.length ] = trackParts;
+    [this.bounds.lower, this.bounds.upper] = boundParts;
+    [this.track.offset, this.track.length] = trackParts;
   }
 
   toMarksArray(marks: Marks): Marks[] {
     const marksArray = [];
     for (const key in marks) {
-      const mark = marks[ key ];
+      const mark = marks[key];
       const val = typeof key === 'number' ? key : parseFloat(key);
       if (val < this.Min || val > this.Max) {
         continue;
       }
-      marksArray.push({ value: val, offset: this.valueToOffset(val), config: mark });
+      marksArray.push({value: val, offset: this.valueToOffset(val), config: mark});
     }
     return marksArray;
   }
@@ -396,7 +380,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     this.setActiveValueIndex(value);
     this.setActiveValue(value);
     // Tooltip visibility of handles
-    if(this.Tooltip){
+    if (this.Tooltip) {
       this._showHandleTooltip(this.Range ? this.activeValueIndex : 0);
     }
   }
@@ -418,24 +402,24 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
   }
 
   createDrag(): void {
-    const sliderDOM   = this.sliderDOM;
+    const sliderDOM = this.sliderDOM;
     const orientField = this.Vertical ? 'pageY' : 'pageX';
     // TODO: using named interface
-    const mouse  = {
+    const mouse = {
       start: 'mousedown', move: 'mousemove', end: 'mouseup',
-      pluckKey                                  : [ orientField ]
-    } as { start: string, move: string, end: string, pluckKey: string[], filter(e: Event): boolean, startPlucked$: Observable<number>, end$: Observable<number>, moveResolved$: Observable<number> } ;
+      pluckKey: [orientField]
+    } as { start: string, move: string, end: string, pluckKey: string[], filter(e: Event): boolean, startPlucked$: Observable<number>, end$: Observable<number>, moveResolved$: Observable<number> };
     const touch = {
       start: 'touchstart', move: 'touchmove', end: 'touchend',
-      pluckKey                                   : [ 'touches', '0', orientField ],
-      filter                                     : (e: MouseEvent | TouchEvent) => !this.utils.isNotTouchEvent(e as TouchEvent)
-    } as { start: string, move: string, end: string, pluckKey: string[], filter(e: Event): boolean, startPlucked$: Observable<number>, end$: Observable<number>, moveResolved$: Observable<number> } ;
+      pluckKey: ['touches', '0', orientField],
+      filter: (e: MouseEvent | TouchEvent) => !this.utils.isNotTouchEvent(e as TouchEvent)
+    } as { start: string, move: string, end: string, pluckKey: string[], filter(e: Event): boolean, startPlucked$: Observable<number>, end$: Observable<number>, moveResolved$: Observable<number> };
     // make observables
-    [ mouse, touch ].forEach(source => {
+    [mouse, touch].forEach(source => {
       // TODO: remove any
       // TODO: filterFunc doesn't match filter in touch, should be checked
       /* tslint:disable-next-line:no-any */
-      const { start, move, end, pluckKey, filterFunc = (() => true) } = source as any;
+      const {start, move, end, pluckKey, filterFunc = (() => true)} = source as any;
       // start
       source.startPlucked$ = fromEvent(sliderDOM, start).pipe(
         filter(filterFunc),
@@ -453,7 +437,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
         distinctUntilChanged(),
         map((position: number) => this.findClosestValue(position)),
         distinctUntilChanged(),
-        takeUntil(source.end$),
+        takeUntil(source.end$)
       );
       // merge to become moving
       // source.move$ = source.startPlucked$.mergeMapTo(source.moveResolved$);
@@ -465,7 +449,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     this.dragend$ = merge(mouse.end$, touch.end$);
   }
 
-  subscribeDrag(periods: string[] = [ 'start', 'move', 'end' ]): void {
+  subscribeDrag(periods: string[] = ['start', 'move', 'end']): void {
     this.log('[subscribeDrag]this.dragstart$ = ', this.dragstart$);
     if (periods.indexOf('start') !== -1 && this.dragstart$ && !this.dragstart_) {
       this.dragstart_ = this.dragstart$.subscribe(this.onDragStart.bind(this));
@@ -480,7 +464,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     }
   }
 
-  unsubscribeDrag(periods: string[] = [ 'start', 'move', 'end' ]): void {
+  unsubscribeDrag(periods: string[] = ['start', 'move', 'end']): void {
     this.log('[unsubscribeDrag]this.dragstart_ = ', this.dragstart_);
     if (periods.indexOf('start') !== -1 && this.dragstart_) {
       this.dragstart_.unsubscribe();
@@ -499,7 +483,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
   }
 
   toggleDragMoving(movable: boolean): void {
-    const periods = [ 'move', 'end' ];
+    const periods = ['move', 'end'];
     if (movable) {
       this.isDragging = true;
       this.subscribeDrag(periods);
@@ -513,7 +497,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     if (disabled) {
       this.unsubscribeDrag();
     } else {
-      this.subscribeDrag([ 'start' ]);
+      this.subscribeDrag(['start']);
     }
   }
 
@@ -525,7 +509,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
   findClosestValue(position: number): number {
     const sliderStart = this.getSliderStartPosition();
     const sliderLength = this.getSliderLength();
-    const ratio  = this.utils.correctNumLimit((position - sliderStart) / sliderLength, 0, 1);
+    const ratio = this.utils.correctNumLimit((position - sliderStart) / sliderLength, 0, 1);
     const val = (this.Max - this.Min) * (this.Vertical ? 1 - ratio : ratio) + this.Min;
     const points = (this.Marks === null ? [] : Object.keys(this.Marks).map(parseFloat));
     // push closest step
@@ -535,7 +519,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     }
     // calculate gaps
     const gaps = points.map(point => Math.abs(val - point));
-    const closest = points[ gaps.indexOf(Math.min(...gaps)) ];
+    const closest = points[gaps.indexOf(Math.min(...gaps))];
     // return the fixed
     return this.Step === null ? closest :
       parseFloat(closest.toFixed(this.utils.getPrecision(this.Step)));
@@ -572,7 +556,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     let res = value;
     if (!this.checkValidValue(value)) { // if empty, use default value
       res = this.DefaultValue === null ?
-        (this.Range ? [ this.Min, this.Max ] : this.Min) : this.DefaultValue;
+        (this.Range ? [this.Min, this.Max] : this.Min) : this.DefaultValue;
     } else { // format
       // TODO: using type guard, remove type cast
       res = this.Range ?
@@ -590,7 +574,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     } // it's an invalid value, just return
     const isArray = Array.isArray(value);
     if (!Array.isArray(value)) {
-      let parsedValue: number =  value;
+      let parsedValue: number = value;
       if (typeof value !== 'number') {
         parsedValue = parseFloat(value);
       }
@@ -611,7 +595,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
     if (Array.isArray(value)) {
       const len = value.length;
       for (let i = 0; i < len; i++) {
-        if (value[ i ] !== val[ i ]) {
+        if (value[i] !== val[i]) {
           return false;
         }
       }
@@ -626,7 +610,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
   /* tslint:disable-next-line:no-any */
   log(...messages: any[]): void {
     if (this.DebugId !== null) {
-      const args = [ `[pg-slider][#${this.DebugId}] ` ].concat(Array.prototype.slice.call(arguments));
+      const args = [`[pg-slider][#${this.DebugId}] `].concat(Array.prototype.slice.call(arguments));
       console.log.apply(null, args);
     }
   }
@@ -634,19 +618,19 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
   // Show one handle's tooltip and hide others'
   private _showHandleTooltip(handleIndex: number = 0): void {
     this.handles.forEach((handle, index) => {
-      this.handles[ index ].active = index === handleIndex;
+      this.handles[index].active = index === handleIndex;
     });
   }
 
   private _hideAllHandleTooltip(): void {
-    if(!this._showHandleTooltip)
+    if (!this._showHandleTooltip)
       this.handles.forEach(handle => handle.active = false);
   }
 
   private _generateHandles(amount: number): SliderHandle[] {
     const handles: SliderHandle[] = [];
     for (let i = 0; i < amount; i++) {
-      handles.push({ offset: null, value: null, active: false });
+      handles.push({offset: null, value: null, active: false});
     }
     return handles;
   }

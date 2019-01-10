@@ -1,14 +1,14 @@
-<div class="nav-tabs-wrapper {{_navTabClass}}" [class.scrolling]="_scrolling" #tabListContainer>
+<div #tabListContainer [class.scrolling]="_scrolling" class="nav-tabs-wrapper {{_navTabClass}}">
   <span class="nav-tabs-navigator left"><i class="pg pg-arrow_left"></i></span>
-  <ul class="nav nav-tabs {{_navTabClass}}" [ngClass]="classMap" (click)="$event.preventDefault()">
-    <li *ngFor="let tabz of tabs" [ngClass]="['nav-item']"
-        [class.disabled]="tabz.disabled">
-      <a href="javascript:void(0);" class=""
-        [attr.id]="tabz.id ? tabz.id + '-link' : ''"
-        [class.active]="tabz.active" [class.disabled]="tabz.disabled"
-        (click)="tabz.active = true;" >
+  <ul (click)="$event.preventDefault()" [ngClass]="classMap" class="nav nav-tabs {{_navTabClass}}">
+    <li *ngFor="let tabz of tabs" [class.disabled]="tabz.disabled"
+        [ngClass]="['nav-item']">
+      <a (click)="tabz.active = true;" [attr.id]="tabz.id ? tabz.id + '-link' : ''"
+         [class.active]="tabz.active"
+         [class.disabled]="tabz.disabled" class=""
+         href="javascript:void(0);">
         <span [ngTransclude]="tabz.headingRef">{{ tabz.heading }}</span>
-        <span *ngIf="tabz.removable" (click)="$event.preventDefault(); removeTab(tabz);" class="bs-remove-tab"> &#10060;</span>
+        <span (click)="$event.preventDefault(); removeTab(tabz);" *ngIf="tabz.removable" class="bs-remove-tab"> &#10060;</span>
       </a>
     </li>
   </ul>

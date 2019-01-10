@@ -8,4 +8,4 @@ export { CasualLayout } from './casual/casual.component';
 export { BlankCasualComponent } from './blank-casual/blank-casual.component';
 export { BlankCorporateComponent } from './blank-corporate/blank-corporate.component';
 export { BlankSimplywhiteComponent } from './blank-simplywhite/blank-simplywhite.component';
-export { FlashVentasComponent } from './flash-ventas/flash-ventas.component';
+export { Consulta } from './consulta/consulta.component';

@@ -1,78 +1,71 @@
-import { AnimationEvent } from '@angular/animations';
-import {
-    forwardRef,
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  Input,
-  OnInit,
-  Output,
-  Renderer2,
-  ViewEncapsulation,
-  ViewChild
-} from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { tagAnimation } from '../../animations/tag-animations';
-import {pgTagComponent} from './tag.component';
-import { toBoolean } from '../util/convert';
 
 @Component({
-  selector       : 'pg-tag-control',
+  selector: 'pg-tag-control',
   encapsulation: ViewEncapsulation.None,
-  providers    : [
+  providers: [
     {
-      provide    : NG_VALUE_ACCESSOR,
+      provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => pgTagControl),
-      multi      : true
+      multi: true
     }
   ],
-  templateUrl       : "./tag.control.component.html",
-  styleUrls      : ["./tag.scss"]
+  templateUrl: "./tag.control.component.html",
+  styleUrls: ["./tag.scss"]
 })
 export class pgTagControl implements OnInit, ControlValueAccessor {
 
-    onChange: (value: string[]) => void = () => null;
-    onTouched: () => void = () => null;
-    @ViewChild('wrapper') wrapper: ElementRef;
-    _tags =[];
-    inputValue = '';
-    _placeholder ='';
-    @Input() 
-    set placeholder(value: string) {
-      this._placeholder = value
-    }
+  @ViewChild('wrapper') wrapper: ElementRef;
+  _tags = [];
+  inputValue = '';
 
-    handleClose(removedTag: any): void {
-        this._tags = this._tags.filter(tag => tag !== removedTag);
+  _placeholder = '';
+
+  @Input()
+  set placeholder(value: string) {
+    this._placeholder = value
+  }
+
+  onChange: (value: string[]) => void = () => null;
+
+  onTouched: () => void = () => null;
+
+  handleClose(removedTag: any): void {
+    this._tags = this._tags.filter(tag => tag !== removedTag);
+  }
+
+  sliceTagName(tag: string): string {
+    const isLongTag = tag.length > 20;
+    return isLongTag ? `${tag.slice(0, 20)}...` : tag;
+  }
+
+  handleInputConfirm(): void {
+    if (this.inputValue) {
+      this._tags.push(this.inputValue);
     }
-    sliceTagName(tag: string): string {
-        const isLongTag = tag.length > 20;
-        return isLongTag ? `${tag.slice(0, 20)}...` : tag;
-    }
-    handleInputConfirm(): void {
-        if (this.inputValue) {
-            this._tags.push(this.inputValue);
-        }
-        this.inputValue = '';
-   } 
-   handleFocus():void{
+    this.inputValue = '';
+  }
+
+  handleFocus(): void {
     this.wrapper.nativeElement.parentNode.parentNode.classList.add('focused');
-   } 
-   handleFocusOut():void{
+  }
+
+  handleFocusOut(): void {
     this.wrapper.nativeElement.parentNode.parentNode.classList.remove('focused');
-   }
-   handleInputBack():void{
+  }
+
+  handleInputBack(): void {
     if (!this.inputValue) {
-        this._tags.splice(-1,1);
+      this._tags.splice(-1, 1);
     }
-   }  
-   updateValue(value:string[] ): void {
+  }
+
+  updateValue(value: string[]): void {
     this._tags = value;
   }
-   writeValue(value: string[]): void {
+
+  writeValue(value: string[]): void {
     this.updateValue(value);
   }
 
@@ -83,6 +76,7 @@ export class pgTagControl implements OnInit, ControlValueAccessor {
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
-   ngOnInit(): void {
+
+  ngOnInit(): void {
   }
 }

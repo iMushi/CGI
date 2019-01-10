@@ -1,40 +1,36 @@
-import {
-  Component,
-  Input,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { pgCollapseComponent } from './collapse.component';
 
 @Component({
-  selector     : 'pg-collapseset',
+  selector: 'pg-collapseset',
   encapsulation: ViewEncapsulation.None,
-  template     : `
+  template: `
     <div class="card-group" [class.horizontal]="Horizontal">
       <ng-content></ng-content>
     </div>
-  `,
+  `
 })
 export class pgCollapsesetComponent {
+  panels: pgCollapseComponent[] = [];
   private _accordion = false;
   private _horizontal = true;
-  panels: pgCollapseComponent[] = [];
-
-  @Input()
-  set Accordion(value: boolean) {
-    this._accordion = value;
-  }
 
   get Accordion(): boolean {
     return this._accordion;
   }
 
   @Input()
-  set Horizontal(value: boolean) {
-    this._horizontal = value;
+  set Accordion(value: boolean) {
+    this._accordion = value;
   }
 
   get Horizontal(): boolean {
     return this._horizontal;
+  }
+
+  @Input()
+  set Horizontal(value: boolean) {
+    this._horizontal = value;
   }
 
   pgClick(collapse: pgCollapseComponent): void {

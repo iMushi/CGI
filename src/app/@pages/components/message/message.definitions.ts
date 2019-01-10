@@ -1,10 +1,10 @@
 export interface MessageDataOptions {
-  Position?:string;
-  Style?:string;
+  Position?: string;
+  Style?: string;
   Duration?: number;
   Animate?: boolean;
-  Title?:string;
-  imgURL?:string;
+  Title?: string;
+  imgURL?: string;
   PauseOnHover?: boolean;
 }
 
@@ -17,7 +17,7 @@ export interface MessageData {
   // TODO: remove the literal parts as it's widened anyway
   type?: 'success' | 'info' | 'warning' | 'error' | 'loading' | string;
   style?: 'simple' | 'bar' | 'flip' | 'circle' | string;
-  position?:'top';
+  position?: 'top';
   content?: string;
 }
 

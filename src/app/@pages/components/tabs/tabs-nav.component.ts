@@ -7,7 +7,6 @@ import {
   ContentChild,
   ContentChildren,
   ElementRef,
-  HostBinding,
   Input,
   NgZone,
   Optional,
@@ -15,7 +14,7 @@ import {
   Renderer2,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { fromEvent } from 'rxjs/observable/fromEvent';
@@ -34,9 +33,9 @@ export type ScrollDirection = 'after' | 'before';
 export type TabPositionMode = 'horizontal' | 'vertical';
 
 @Component({
-  selector     : 'pg-tabs-nav',
+  selector: 'pg-tabs-nav',
   encapsulation: ViewEncapsulation.None,
-  template     : `
+  template: `
   
     <div class="nav-tabs-wrapper" [class.scrolling]="_showPaginationControls" #tabListContainer>
       <span class="nav-tabs-navigator left btn btn-link" (click)="_scrollHeader('before')" [class.disabled]="_disableScrollBefore" *ngIf="_showPaginationControls">
@@ -53,32 +52,63 @@ export type TabPositionMode = 'horizontal' | 'vertical';
       </span>
     </div> 
   `,
-  host: {
-
-  }
+  host: {}
 })
 export class pgTabsNavComponent implements AfterContentChecked, AfterContentInit {
-  private _animated = true;
-  private _hideBar = false;
-  private _showPagination = true;
-
   _showPaginationControls = false;
   _disableScrollAfter = true;
   _disableScrollBefore = true;
-  _scrollDistance = 0;
   _selectedIndexChanged = false;
   _realignInkBar: Subscription | null = null;
   _tabLabelCount: number;
   _scrollDistanceChanged: boolean;
-  _selectedIndex = 0;
   _tabPositionMode: TabPositionMode = 'horizontal';
   _tabPosition = 'top';
   @Input() Size = 'default';
   _type = 'line';
+  @ContentChild('tabBarExtraContent') _tabBarExtraContent: TemplateRef<void>;
+  @ContentChildren(pgTabLabelDirective) _labelWrappers: QueryList<pgTabLabelDirective>;
+  @ViewChild(pgTabsInkBarDirective) _inkBar: pgTabsInkBarDirective;
+  @ViewChild('tabListContainer') _tabListContainer: ElementRef;
+  @ViewChild('tabList') _tabList: ElementRef;
+  private _animated = true;
+  private _hideBar = false;
+  private _showPagination = true;
+
+  constructor(public _elementRef: ElementRef,
+              private _ngZone: NgZone,
+              private _renderer: Renderer2,
+              @Optional() private _dir: Directionality) {
+  }
+
+  _scrollDistance = 0;
+
+  get scrollDistance(): number {
+    return this._scrollDistance;
+  }
+
+  /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */
+  set scrollDistance(v: number) {
+    this._scrollDistance = Math.max(0, Math.min(this._getMaxScrollDistance(), v));
+
+    // Mark that the scroll distance has changed so that after the view is checked, the CSS
+    // transformation can move the header.
+    this._scrollDistanceChanged = true;
+
+    this._checkScrollingControls();
+  }
+
+  _selectedIndex = 0;
+
+  get selectedIndex(): number {
+    return this._selectedIndex;
+  }
 
   @Input()
-  set Animated(value: boolean) {
-    this._animated = toBoolean(value);
+  set selectedIndex(value: number) {
+    this._selectedIndexChanged = this._selectedIndex !== value;
+
+    this._selectedIndex = value;
   }
 
   get Animated(): boolean {
@@ -86,8 +116,8 @@ export class pgTabsNavComponent implements AfterContentChecked, AfterContentInit
   }
 
   @Input()
-  set Position(value:string){
-    this._tabPosition =  value;
+  set Animated(value: boolean) {
+    this._animated = toBoolean(value);
   }
 
   get Position(): string {
@@ -95,8 +125,8 @@ export class pgTabsNavComponent implements AfterContentChecked, AfterContentInit
   }
 
   @Input()
-  set HideBar(value: boolean) {
-    this._hideBar = toBoolean(value);
+  set Position(value: string) {
+    this._tabPosition = value;
   }
 
   get HideBar(): boolean {
@@ -104,27 +134,30 @@ export class pgTabsNavComponent implements AfterContentChecked, AfterContentInit
   }
 
   @Input()
-  set Type(value: string) {
-    this._type = value;
+  set HideBar(value: boolean) {
+    this._hideBar = toBoolean(value);
   }
 
   get Type(): string {
     return this._type;
   }
 
-  @ContentChild('tabBarExtraContent') _tabBarExtraContent: TemplateRef<void>;
-  @ContentChildren(pgTabLabelDirective) _labelWrappers: QueryList<pgTabLabelDirective>;
-  @ViewChild(pgTabsInkBarDirective) _inkBar: pgTabsInkBarDirective;
-  @ViewChild('tabListContainer') _tabListContainer: ElementRef;
-  @ViewChild('tabList') _tabList: ElementRef;
+  @Input()
+  set Type(value: string) {
+    this._type = value;
+  }
+
+  get ShowPagination(): boolean {
+    return this._showPagination;
+  }
 
   @Input()
   set ShowPagination(value: boolean) {
     this._showPagination = toBoolean(value);
   }
 
-  get ShowPagination(): boolean {
-    return this._showPagination;
+  get PositionMode(): TabPositionMode {
+    return this._tabPositionMode;
   }
 
   @Input()
@@ -136,25 +169,32 @@ export class pgTabsNavComponent implements AfterContentChecked, AfterContentInit
     }
   }
 
-  get PositionMode(): TabPositionMode {
-    return this._tabPositionMode;
+  get viewWidthHeightPix(): number {
+    let PAGINATION_PIX = 0;
+    if (this._showPaginationControls) {
+      PAGINATION_PIX = 64;
+    }
+    if (this.PositionMode === 'horizontal') {
+      return this._tabListContainer.nativeElement.offsetWidth - PAGINATION_PIX;
+    } else {
+      return this._tabListContainer.nativeElement.offsetHeight - PAGINATION_PIX;
+    }
   }
 
-  @Input()
-  set selectedIndex(value: number) {
-    this._selectedIndexChanged = this._selectedIndex !== value;
-
-    this._selectedIndex = value;
+  get tabListScrollWidthHeightPix(): number {
+    if (this.PositionMode === 'horizontal') {
+      return this._tabList.nativeElement.scrollWidth;
+    } else {
+      return this._tabList.nativeElement.scrollHeight;
+    }
   }
 
-  get selectedIndex(): number {
-    return this._selectedIndex;
-  }
-
-  constructor(public _elementRef: ElementRef,
-              private _ngZone: NgZone,
-              private _renderer: Renderer2,
-              @Optional() private _dir: Directionality) {
+  get elementRefOffSetWidthHeight(): number {
+    if (this.PositionMode === 'horizontal') {
+      return this._elementRef.nativeElement.offsetWidth;
+    } else {
+      return this._elementRef.nativeElement.offsetHeight;
+    }
   }
 
   _onContentChanges(): void {
@@ -237,7 +277,7 @@ export class pgTabsNavComponent implements AfterContentChecked, AfterContentInit
 
   _scrollToLabel(labelIndex: number): void {
     const selectedLabel = this._labelWrappers
-      ? this._labelWrappers.toArray()[ labelIndex ]
+      ? this._labelWrappers.toArray()[labelIndex]
       : null;
 
     if (!selectedLabel) {
@@ -289,58 +329,15 @@ export class pgTabsNavComponent implements AfterContentChecked, AfterContentInit
     return (this.tabListScrollWidthHeightPix - this.viewWidthHeightPix) || 0;
   }
 
-  /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */
-  set scrollDistance(v: number) {
-    this._scrollDistance = Math.max(0, Math.min(this._getMaxScrollDistance(), v));
-
-    // Mark that the scroll distance has changed so that after the view is checked, the CSS
-    // transformation can move the header.
-    this._scrollDistanceChanged = true;
-
-    this._checkScrollingControls();
-  }
-
-  get scrollDistance(): number {
-    return this._scrollDistance;
-  }
-
-  get viewWidthHeightPix(): number {
-    let PAGINATION_PIX = 0;
-    if (this._showPaginationControls) {
-      PAGINATION_PIX = 64;
-    }
-    if (this.PositionMode === 'horizontal') {
-      return this._tabListContainer.nativeElement.offsetWidth - PAGINATION_PIX;
-    } else {
-      return this._tabListContainer.nativeElement.offsetHeight - PAGINATION_PIX;
-    }
-  }
-
-  get tabListScrollWidthHeightPix(): number {
-    if (this.PositionMode === 'horizontal') {
-      return this._tabList.nativeElement.scrollWidth;
-    } else {
-      return this._tabList.nativeElement.scrollHeight;
-    }
-  }
-
-  get elementRefOffSetWidthHeight(): number {
-    if (this.PositionMode === 'horizontal') {
-      return this._elementRef.nativeElement.offsetWidth;
-    } else {
-      return this._elementRef.nativeElement.offsetHeight;
-    }
-  }
-
   _getLayoutDirection(): Direction {
     return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
   }
 
   _alignInkBarToSelectedTab(): void {
-   
+
     if (this.Type !== 'fillup') {
       const selectedLabelWrapper = this._labelWrappers && this._labelWrappers.length
-        ? this._labelWrappers.toArray()[ this.selectedIndex ].elementRef.nativeElement
+        ? this._labelWrappers.toArray()[this.selectedIndex].elementRef.nativeElement
         : null;
       if (this._inkBar) {
         this._inkBar.alignToElement(selectedLabelWrapper);

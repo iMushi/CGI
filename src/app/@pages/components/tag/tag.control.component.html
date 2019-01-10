@@ -1,11 +1,12 @@
-<div class="tags-control" #wrapper>
-<pg-tag *ngFor="let tag of _tags; let i = index;"
-      [Closable]="i !== 0"
-      (Close)="handleClose(tag)">
-      {{sliceTagName(tag)}}
-    </pg-tag>
-    <input class="form-control" type="text"
-      [(ngModel)]="inputValue"
-      style="width: 78px;"
-      (blur)="handleInputConfirm()" (keydown.enter)="handleInputConfirm()" (keydown.backspace)="handleInputBack()" (focus)="handleFocus()" (focusout)="handleFocusOut()" placeholder="{{_placeholder}}">
-    </div>
+<div #wrapper class="tags-control">
+  <pg-tag (Close)="handleClose(tag)"
+          *ngFor="let tag of _tags; let i = index;"
+          [Closable]="i !== 0">
+    {{sliceTagName(tag)}}
+  </pg-tag>
+  <input (blur)="handleInputConfirm()" (focus)="handleFocus()"
+         (focusout)="handleFocusOut()"
+         (keydown.backspace)="handleInputBack()"
+         (keydown.enter)="handleInputConfirm()" [(ngModel)]="inputValue" class="form-control" placeholder="{{_placeholder}}" style="width: 78px;"
+         type="text">
+</div>

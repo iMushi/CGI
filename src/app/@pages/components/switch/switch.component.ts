@@ -1,18 +1,11 @@
-import {
-  forwardRef,
-  Component,
-  HostListener,
-  Input,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, forwardRef, HostListener, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { toBoolean } from '../util/convert';
 
 @Component({
-  selector     : 'pg-switch',
+  selector: 'pg-switch',
   encapsulation: ViewEncapsulation.None,
-  template     : `
+  template: `
     <span [ngClass]="_classMap" tabindex="0">
       <span [ngClass]="_innerPrefixCls">
         <ng-template [ngIf]="_checked">
@@ -24,35 +17,25 @@ import { toBoolean } from '../util/convert';
       </span>
     </span>
   `,
-  providers    : [
+  providers: [
     {
-      provide    : NG_VALUE_ACCESSOR,
+      provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => pgSwitchComponent),
-      multi      : true
+      multi: true
     }
   ],
-  styleUrls    : [
+  styleUrls: [
     './switch.scss'
   ]
 })
 export class pgSwitchComponent implements OnInit, ControlValueAccessor {
-  private _disabled = false;
   _prefixCls = 'toggle-switch';
   _color = "primary";
   _innerPrefixCls = `${this._prefixCls}-inner `;
   _classMap;
   _size: string;
   _checked = false;
-  
-  // ngModel Access
-  onChange: (value: boolean) => void = () => null;
-  onTouched: () => void = () => null;
-
-  @Input()
-  set Size(value: string) {
-    this._size = value;
-    this.setClassMap();
-  }
+  private _disabled = false;
 
   @Input()
   set Color(value: string) {
@@ -65,8 +48,8 @@ export class pgSwitchComponent implements OnInit, ControlValueAccessor {
   }
 
   @Input()
-  set Disabled(value: boolean) {
-    this._disabled = toBoolean(value);
+  set Size(value: string) {
+    this._size = value;
     this.setClassMap();
   }
 
@@ -74,7 +57,18 @@ export class pgSwitchComponent implements OnInit, ControlValueAccessor {
     return this._disabled;
   }
 
-  @HostListener('click', [ '$event' ])
+  @Input()
+  set Disabled(value: boolean) {
+    this._disabled = toBoolean(value);
+    this.setClassMap();
+  }
+
+  // ngModel Access
+  onChange: (value: boolean) => void = () => null;
+
+  onTouched: () => void = () => null;
+
+  @HostListener('click', ['$event'])
   onClick(e: MouseEvent): void {
     e.preventDefault();
     if (!this._disabled) {
@@ -93,11 +87,11 @@ export class pgSwitchComponent implements OnInit, ControlValueAccessor {
 
   setClassMap(): void {
     this._classMap = {
-      [this._prefixCls]              : true,
-      [`${this._prefixCls}-checked`] : this._checked,
+      [this._prefixCls]: true,
+      [`${this._prefixCls}-checked`]: this._checked,
       [`${this._prefixCls}-disabled`]: this._disabled,
-      [`${this._prefixCls}-small`]   : this._size === 'small',
-      [this._color]:this._color
+      [`${this._prefixCls}-small`]: this._size === 'small',
+      [this._color]: this._color
     };
   }
 

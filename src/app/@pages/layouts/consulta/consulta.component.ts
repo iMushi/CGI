@@ -3,11 +3,11 @@ import { RootLayout } from '../root/root.component';
 
 @Component({
   selector: 'app-flash-ventas',
-  templateUrl: './flash-ventas.component.html',
-  styleUrls: ['./flash-ventas.component.scss'],
+  templateUrl: './consulta.component.html',
+  styleUrls: ['./consulta.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class FlashVentasComponent extends RootLayout implements OnInit {
+export class ConsultaComponent extends RootLayout implements OnInit {
 
   menuLinks = [
     {

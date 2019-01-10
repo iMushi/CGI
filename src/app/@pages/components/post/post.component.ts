@@ -1,29 +1,11 @@
-import {
-  Component,
-  Input,
-  ViewEncapsulation,
-  ElementRef,
-  ViewChild,
-  TemplateRef,
-  ContentChild,
-  EventEmitter,
-  Output
-} from '@angular/core';
-
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { Component, ContentChild, TemplateRef, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector     : 'pgpost',
+  selector: 'pgpost',
   encapsulation: ViewEncapsulation.None,
-  templateUrl : './post.component.html',
+  templateUrl: './post.component.html'
 })
 export class pgPost {
   @ContentChild('PostTitle') PostTitle: TemplateRef<void>;
-  
+
 }

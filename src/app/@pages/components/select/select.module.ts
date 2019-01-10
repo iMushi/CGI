@@ -7,9 +7,9 @@ import { OptionPipe } from './option.pipe';
 import { pgSelectComponent } from './select.component';
 
 @NgModule({
-  imports     : [ CommonModule, FormsModule, OverlayModule ],
-  declarations: [ OptionPipe, pgOptionComponent, pgSelectComponent ],
-  exports     : [ OptionPipe, pgOptionComponent, pgSelectComponent ]
+  imports: [CommonModule, FormsModule, OverlayModule],
+  declarations: [OptionPipe, pgOptionComponent, pgSelectComponent],
+  exports: [OptionPipe, pgOptionComponent, pgSelectComponent]
 })
 export class pgSelectModule {
 }

@@ -1,9 +1,8 @@
-
-$disabled-color:$color-master-lighter;
-$font-size-base:14px;
-$component-background:#fff;
-$switch-duration:200ms;
-$ease-in-out-circ:ease;
+$disabled-color: $color-master-lighter;
+$font-size-base: 14px;
+$component-background: #fff;
+$switch-duration: 200ms;
+$ease-in-out-circ: ease;
 
 .toggle-switch {
   position: relative;
@@ -21,6 +20,7 @@ $ease-in-out-circ:ease;
   cursor: pointer;
   transition: all $switch-duration;
   user-select: none;
+
   &-inner {
     color: #fff;
     font-size: $font-size-base;
@@ -35,7 +35,7 @@ $ease-in-out-circ:ease;
     height: 30px;
     left: 0;
     top: 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     border-radius: 30px;
     background-color: $component-background;
     content: " ";
@@ -88,7 +88,8 @@ $ease-in-out-circ:ease;
         margin-right: 18px;
       }
     }
-    &:active{
+
+    &:active {
       &.toggle-switch-checked:after {
         margin-left: -22px;
       }
@@ -98,21 +99,27 @@ $ease-in-out-circ:ease;
 
   &-checked {
     background-color: $color-primary;
-    &.primary{
+
+    &.primary {
       background-color: $color-primary;
     }
-    &.success{
+
+    &.success {
       background-color: $color-success;
     }
-    &.info{
+
+    &.info {
       background-color: $color-info;
     }
-    &.info{
+
+    &.info {
       background-color: $color-danger;
     }
-    &.warning{
+
+    &.warning {
       background-color: $color-warning;
     }
+
     .switch-toggle-inner {
       margin-left: 6px;
       margin-right: 24px;
@@ -132,6 +139,7 @@ $ease-in-out-circ:ease;
     cursor: not-allowed;
     background: #f4f4f4;
     opacity: 0.5;
+
     &:after {
       //background:$color-master-lighter;
       cursor: not-allowed;

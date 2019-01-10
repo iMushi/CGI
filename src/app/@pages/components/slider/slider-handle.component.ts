@@ -1,12 +1,10 @@
-import { Component, HostListener, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
-
-import { toBoolean } from '../util/convert';
+import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { pgSliderComponent } from './slider.component';
 
 @Component({
-  selector     : 'pg-slider-handle',
+  selector: 'pg-slider-handle',
   encapsulation: ViewEncapsulation.None,
-  template     : `
+  template: `
     <div [class]="ClassName" [ngStyle]="style">
       <div class="tooltip fade top" [class.show]="_showToolTip" style="top: -33px;left: -7px;">
         <div class="tooltip-inner">
@@ -17,9 +15,9 @@ import { pgSliderComponent } from './slider.component';
   `
 })
 export class pgSliderHandleComponent implements OnChanges {
-  
+
   // Locals
-  tooltipTitle: string; 
+  tooltipTitle: string;
   style: object = {};
   _showToolTip = false;
 
@@ -28,11 +26,13 @@ export class pgSliderHandleComponent implements OnChanges {
   @Input() Offset: number;
   @Input() Value: number; // [For tooltip]
   @Input() TipFormatter: (value: number) => string; // [For tooltip]
+
+  constructor(private _slider: pgSliderComponent) {
+  }
+
   @Input() set Active(value: boolean) { // [For tooltip]
     this._showToolTip = value
   }
-
-  constructor(private _slider: pgSliderComponent) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.Offset) {
@@ -48,6 +48,6 @@ export class pgSliderHandleComponent implements OnChanges {
   }
 
   private _updateStyle(): void {
-    this.style[ this.Vertical ? 'bottom' : 'left' ] = `${this.Offset}%`;
+    this.style[this.Vertical ? 'bottom' : 'left'] = `${this.Offset}%`;
   }
 }

@@ -14,6 +14,10 @@ export class pgGlobalMonitorService {
 
   _navItemSource: EventEmitter<string> = new EventEmitter();
 
+  constructor() {
+    this._observeGlobalEvents();
+  }
+
   getGlobalCount(): number {
     return ++this.counter;
   }
@@ -31,10 +35,6 @@ export class pgGlobalMonitorService {
       };
       this._navItemSource.emit('documentClick');
     });
-  }
-
-  constructor() {
-    this._observeGlobalEvents();
   }
 }
 

@@ -5,19 +5,19 @@
 import { DOWN_ARROW, ENTER, TAB } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import {
-  forwardRef,
   AfterContentChecked,
   AfterContentInit,
   Component,
   ElementRef,
   EventEmitter,
+  forwardRef,
   HostListener,
   Input,
   OnInit,
   Output,
   Renderer2,
   ViewChild,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { dropDownAnimation } from '../../animations/dropdown-animations';
@@ -28,30 +28,25 @@ import { pgOptionComponent } from './option.component';
 import { OptionPipe } from './option.pipe';
 
 @Component({
-  selector     : 'pg-select-fx',
+  selector: 'pg-select-fx',
   encapsulation: ViewEncapsulation.None,
-  providers    : [
+  providers: [
     {
-      provide    : NG_VALUE_ACCESSOR,
+      provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => pgSelectFXComponent),
-      multi      : true
+      multi: true
     }
   ],
-  animations   : [
+  animations: [
     dropDownAnimation,
     tagAnimation
   ],
-  templateUrl:'./select.component.html',
-  styleUrls    : [
-    './style/index.scss',
+  templateUrl: './select.component.html',
+  styleUrls: [
+    './style/index.scss'
   ]
 })
 export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterContentChecked, ControlValueAccessor {
-  private _allowClear = false;
-  private _disabled = false;
-  private _isTags = false;
-  private _isMultiple = false;
-  private _keepUnListOptions = false;
   _el: HTMLElement;
   _isOpen = false;
   _prefixCls = 'pg-select';
@@ -79,12 +74,9 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
   _composing = false;
   _mode;
   _backDropStyles = {
-    "transform":'scale3d(1,1,1)'
-  }
-  _openBackdrop = false
-  // ngModel Access
-  onChange: (value: string | string[]) => void = () => null;
-  onTouched: () => void = () => null;
+    "transform": 'scale3d(1,1,1)'
+  };
+  _openBackdrop = false;
   @ViewChild('searchInput') searchInputElementRef;
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdownUl') dropdownUl: ElementRef;
@@ -96,10 +88,14 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
   @Input() Filter = true;
   @Input() MaxMultiple = Infinity;
   @ViewChild(CdkConnectedOverlay) _cdkOverlay: CdkConnectedOverlay;
+  private _allowClear = false;
+  private _disabled = false;
+  private _isTags = false;
+  private _isMultiple = false;
+  private _keepUnListOptions = false;
 
-  @Input()
-  set AllowClear(value: boolean) {
-    this._allowClear = toBoolean(value);
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {
+    this._el = this._elementRef.nativeElement;
   }
 
   get AllowClear(): boolean {
@@ -107,8 +103,8 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
   }
 
   @Input()
-  set KeepUnListOptions(value: boolean) {
-    this._keepUnListOptions = toBoolean(value);
+  set AllowClear(value: boolean) {
+    this._allowClear = toBoolean(value);
   }
 
   get KeepUnListOptions(): boolean {
@@ -116,13 +112,13 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
   }
 
   @Input()
-  set Mode(value: string) {
-    this._mode = value;
+  set KeepUnListOptions(value: boolean) {
+    this._keepUnListOptions = toBoolean(value);
   }
 
   @Input()
-  set Multiple(value: boolean) {
-    this._isMultiple = toBoolean(value);
+  set Mode(value: string) {
+    this._mode = value;
   }
 
   get Multiple(): boolean {
@@ -130,8 +126,8 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
   }
 
   @Input()
-  set PlaceHolder(value: string) {
-    this._placeholder = value;
+  set Multiple(value: boolean) {
+    this._isMultiple = toBoolean(value);
   }
 
   get PlaceHolder(): string {
@@ -139,8 +135,8 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
   }
 
   @Input()
-  set NotFoundContent(value: string) {
-    this._notFoundContent = value;
+  set PlaceHolder(value: string) {
+    this._placeholder = value;
   }
 
   get NotFoundContent(): string {
@@ -148,13 +144,22 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
   }
 
   @Input()
-  set Size(value: string) {
-    this._size = { large: 'lg', small: 'sm' }[ value ];
-    this.setClassMap();
+  set NotFoundContent(value: string) {
+    this._notFoundContent = value;
   }
 
   get Size(): string {
     return this._size;
+  }
+
+  @Input()
+  set Size(value: string) {
+    this._size = {large: 'lg', small: 'sm'}[value];
+    this.setClassMap();
+  }
+
+  get Tags(): boolean {
+    return this._isTags;
   }
 
   @Input()
@@ -164,8 +169,8 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
     this.Multiple = isTags;
   }
 
-  get Tags(): boolean {
-    return this._isTags;
+  get Disabled(): boolean {
+    return this._disabled;
   }
 
   @Input()
@@ -175,8 +180,8 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
     this.setClassMap();
   }
 
-  get Disabled(): boolean {
-    return this._disabled;
+  get Open(): boolean {
+    return this._isOpen;
   }
 
   @Input()
@@ -186,7 +191,7 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
     if (this._isOpen === isOpen) {
       setTimeout(() => {
         this._backDropStyles = {
-          "transform":'scale3d(1,1,1)'
+          "transform": 'scale3d(1,1,1)'
         }
       });
       return;
@@ -206,7 +211,7 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
       setTimeout(() => {
         this._openBackdrop = true;
         this._backDropStyles = {
-          "transform":'scale3d(' + 1 + ', ' + scaleV + ', 1)'
+          "transform": 'scale3d(' + 1 + ', ' + scaleV + ', 1)'
         }
       });
     }
@@ -221,9 +226,18 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
 
   }
 
-  get Open(): boolean {
-    return this._isOpen;
+  get Value(): string | string[] {
+    return this._value;
   }
+
+  set Value(value: string | string[]) {
+    this._updateValue(value);
+  }
+
+  // ngModel Access
+  onChange: (value: string | string[]) => void = () => null;
+
+  onTouched: () => void = () => null;
 
   /** new -option insert or new tags insert */
   addOption = (option) => {
@@ -235,7 +249,7 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
         this.forceUpdateSelectedOption(this._value);
       }
     }
-  }
+  };
 
   /** -option remove or tags remove */
   removeOption(option: pgOptionComponent): void {
@@ -334,7 +348,7 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
       $event.preventDefault();
       $event.stopPropagation();
     }
-  }
+  };
 
   /** select multiple option */
   selectMultipleOption(option: pgOptionComponent, $event?: MouseEvent): void {
@@ -393,7 +407,7 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
       const selectedOption = this._options.filter((item) => {
         return (item != null) && (item.Value === currentModelValue);
       });
-      this.chooseOption(selectedOption[ 0 ]);
+      this.chooseOption(selectedOption[0]);
     }
   }
 
@@ -402,14 +416,6 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
     setTimeout(_ => {
       this.updateSelectedOption(value);
     });
-  }
-
-  get Value(): string | string[] {
-    return this._value;
-  }
-
-  set Value(value: string | string[]) {
-    this._updateValue(value);
   }
 
   clearAllSelectedOption(emitChange: boolean = true): void {
@@ -455,11 +461,11 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
   }
 
   preOption(option: pgOptionComponent, options: pgOptionComponent[]): pgOptionComponent {
-    return options[ options.indexOf(option) - 1 ] || options[ options.length - 1 ];
+    return options[options.indexOf(option) - 1] || options[options.length - 1];
   }
 
   nextOption(option: pgOptionComponent, options: pgOptionComponent[]): pgOptionComponent {
-    return options[ options.indexOf(option) + 1 ] || options[ 0 ];
+    return options[options.indexOf(option) + 1] || options[0];
   }
 
   clearSearchText(): void {
@@ -470,11 +476,11 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
   updateFilterOption(updateActiveFilter: boolean = true): void {
     if (this.Filter) {
       this._filterOptions = new OptionPipe().transform(this._options, {
-        'searchText'     : this._searchText,
-        'tags'           : this._isTags,
+        'searchText': this._searchText,
+        'tags': this._isTags,
         'notFoundContent': this._isTags ? this._searchText : this._notFoundContent,
-        'disabled'       : !this._isTags,
-        'value'          : this._isTags ? this._searchText : 'disabled'
+        'disabled': !this._isTags,
+        'value': this._isTags ? this._searchText : 'disabled'
       });
     } else {
       this._filterOptions = this._options;
@@ -482,7 +488,7 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
 
     /** TODO: cause pre & next key selection not work */
     if (updateActiveFilter && !this._selectedOption) {
-      this._activeFilterOption = this._filterOptions[ 0 ];
+      this._activeFilterOption = this._filterOptions[0];
     }
   }
 
@@ -490,7 +496,7 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
     this.SearchChange.emit(searchValue);
   }
 
-  @HostListener('click', [ '$event' ])
+  @HostListener('click', ['$event'])
   onClick(e: MouseEvent): void {
     e.preventDefault();
     if (!this._disabled) {
@@ -498,7 +504,7 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
     }
   }
 
-  @HostListener('keydown', [ '$event' ])
+  @HostListener('keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
     const keyCode = e.keyCode;
     if (keyCode === TAB && this.Open) {
@@ -520,13 +526,13 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
     }
     this._openBackdrop = false;
     this._backDropStyles = {
-      "transform":'scale3d(1,1,1)'
-    }
+      "transform": 'scale3d(1,1,1)'
+    };
     setTimeout(() => {
       this.onTouched();
       this.clearSearchText();
       this.Open = false;
-    },300);
+    }, 300);
   }
 
   setClassMap(): void {
@@ -547,14 +553,14 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
       this._renderer.addClass(this._el, _className);
     });
     this._selectionClassMap = {
-      [this._selectionPrefixCls]               : true,
-      [`${this._selectionPrefixCls}--single`]  : !this.Multiple,
+      [this._selectionPrefixCls]: true,
+      [`${this._selectionPrefixCls}--single`]: !this.Multiple,
       [`${this._selectionPrefixCls}--multiple`]: this.Multiple
     };
   }
 
   setDropDownClassMap(): void {
-    // setTimeout(()=>{ 
+    // setTimeout(()=>{
     //   this._dropDownClassMap = {
     //     [' cs-active']                               : true,
     //   }
@@ -567,7 +573,7 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
       if (this._activeFilterOption && this._activeFilterOption.Value) {
         const index = this._filterOptions.findIndex(option => option.Value === this._activeFilterOption.Value);
         try {
-          const scrollPane = this.dropdownUl.nativeElement.children[ index ] as HTMLLIElement;
+          const scrollPane = this.dropdownUl.nativeElement.children[index] as HTMLLIElement;
           // TODO: scrollIntoViewIfNeeded is not a standard API, why doing so?
           /* tslint:disable-next-line:no-any */
           (scrollPane as any).scrollIntoViewIfNeeded(false);
@@ -596,7 +602,7 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
       if (this._cdkOverlay && this._cdkOverlay.overlayRef) {
         this._cdkOverlay.overlayRef.updateSize({
           width: this._triggerWidth,
-          height:rect.height,
+          height: rect.height
         });
       }
     });
@@ -632,10 +638,6 @@ export class pgSelectFXComponent implements OnInit, AfterContentInit, AfterConte
     if (this.dropdownUl && (this.dropdownUl.nativeElement.scrollHeight === this.dropdownUl.nativeElement.clientHeight)) {
       this.ScrollToBottom.emit(true);
     }
-  }
-
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {
-    this._el = this._elementRef.nativeElement;
   }
 
   ngAfterContentInit(): void {

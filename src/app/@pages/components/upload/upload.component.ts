@@ -1,18 +1,32 @@
 // tslint:disable:ordered-imports no-any
-import { Component, ChangeDetectionStrategy, ViewChild, ViewEncapsulation, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, SimpleChange, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChange,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { filter } from 'rxjs/operators/filter';
 import { toBoolean } from '../util/convert';
 import { pgUploadBtnComponent } from './upload-btn.component';
-import { UploadFile, UploadListType, ShowUploadListInterface, UploadChangeParam, UploadType, ZipButtonOptions, UploadFileStatus, UploadFilter } from './interface';
+import { ShowUploadListInterface, UploadChangeParam, UploadFile, UploadFilter, UploadListType, UploadType, ZipButtonOptions } from './interface';
 
 @Component({
   selector: 'pg-upload',
-  templateUrl:"./upload.component.html",
+  templateUrl: "./upload.component.html",
   styleUrls: [
-    './upload.scss',
+    './upload.scss'
   ],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
@@ -20,11 +34,8 @@ import { UploadFile, UploadListType, ShowUploadListInterface, UploadChangeParam,
 })
 export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
 
-  private inited = false;
-  private progressTimer: any;
   /** @private */
   @ViewChild('upload') upload: pgUploadBtnComponent;
-
   // region: fields
   @Input() Type: UploadType = 'select';
   @Input() Limit: number = 0;
@@ -39,65 +50,139 @@ export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
   @Input() Filter: UploadFilter[] = [];
   @Input() FileList: UploadFile[] = [];
   @Output() FileListChange: EventEmitter<UploadFile[]> = new EventEmitter<UploadFile[]>();
-
+  @Input() Headers: {};
+  @Input() ListType: UploadListType = 'text';
+  @Input() extraClass: string;
+  @Input() Name = 'file';
+  @Input() Remove: (file: UploadFile) => boolean | Observable<boolean>;
+  @Input() Preview: (file: UploadFile) => void;
+  @Output() Change: EventEmitter<UploadChangeParam> = new EventEmitter<UploadChangeParam>();
+  /** @private */
+  _btnOptions: ZipButtonOptions;
+  // region: styles
+  _prefixCls = 'upload';
+  _classList: string[] = [];
+  private inited = false;
+  private progressTimer: any;
   private _disabled = false;
-  @Input()
-  set Disabled(value: boolean) {
-    this._disabled = toBoolean(value);
+  private _multiple = false;
+  private _showUploadList: boolean | ShowUploadListInterface = true;
+  private _showBtn = true;
+  private _withCredentials = false;
+  private uploadErrorText = "Error Upload";
+  private dragState: string;
+
+  constructor(private cd: ChangeDetectorRef) {
   }
+
   get Disabled(): boolean {
     return this._disabled;
   }
 
-  @Input() Headers: {};
-  @Input() ListType: UploadListType = 'text';
-  @Input() extraClass:string;
-
-  private _multiple = false;
   @Input()
-  set Multiple(value: boolean) {
-    this._multiple = toBoolean(value);
+  set Disabled(value: boolean) {
+    this._disabled = toBoolean(value);
   }
+
   get Multiple(): boolean {
     return this._multiple;
   }
 
-  @Input() Name = 'file';
-
-  private _showUploadList: boolean | ShowUploadListInterface = true;
   @Input()
-  set ShowUploadList(value: boolean | ShowUploadListInterface) {
-    this._showUploadList = typeof value === 'boolean' ? toBoolean(value) : value;
+  set Multiple(value: boolean) {
+    this._multiple = toBoolean(value);
   }
+
   get ShowUploadList(): boolean | ShowUploadListInterface {
     return this._showUploadList;
   }
 
-  private _showBtn = true;
   @Input()
-  set ShowButton(value: boolean) {
-    this._showBtn = toBoolean(value);
+  set ShowUploadList(value: boolean | ShowUploadListInterface) {
+    this._showUploadList = typeof value === 'boolean' ? toBoolean(value) : value;
   }
+
+  // endregion
+
   get ShowButton(): boolean {
     return this._showBtn;
   }
 
-  private _withCredentials = false;
+  // region: upload
+
   @Input()
-  set WithCredentials(value: boolean) {
-    this._withCredentials = toBoolean(value);
+  set ShowButton(value: boolean) {
+    this._showBtn = toBoolean(value);
   }
+
   get WithCredentials(): boolean {
     return this._withCredentials;
   }
 
-  @Input() Remove: (file: UploadFile) => boolean | Observable<boolean>;
-  @Input() Preview: (file: UploadFile) => void;
+  @Input()
+  set WithCredentials(value: boolean) {
+    this._withCredentials = toBoolean(value);
+  }
 
-  @Output() Change: EventEmitter<UploadChangeParam> = new EventEmitter<UploadChangeParam>();
+  fileDrop(e: DragEvent): void {
+    if (e.type === this.dragState) return;
+    this.dragState = e.type;
+    this._setClassMap();
+  }
 
-  /** @private */
-  _btnOptions: ZipButtonOptions;
+  onRemove = (file: UploadFile): void => {
+    this.upload.abort(file);
+    file.status = 'removed';
+    ((this.Remove ? this.Remove instanceof Observable ? this.Remove : of(this.Remove(file)) : of(true)) as Observable<any>).pipe(filter((res: boolean) => res)).subscribe(res => {
+      const removedFileList = this.removeFileItem(file, this.FileList);
+      if (removedFileList) {
+        this.FileList = removedFileList;
+        this.Change.emit({
+          file,
+          fileList: removedFileList
+        });
+        this.FileListChange.emit(this.FileList);
+        this.cd.detectChanges();
+      }
+    });
+  };
+
+  _setClassMap(): void {
+    const isDrag = this.Type === 'drag';
+    let subCls: string[] = [];
+    if (this.Type === 'drag') {
+      subCls = [
+        this.FileList.some(file => file.status === 'uploading') && `${this._prefixCls}-drag-uploading`,
+        this.dragState === 'dragover' && `${this._prefixCls}-drag-hover`
+      ];
+    } else {
+      subCls = [
+        `${this._prefixCls}-select-${this.ListType}`
+      ];
+    }
+
+    this._classList = [
+      this._prefixCls,
+      `${this._prefixCls}-${this.Type}`,
+      ...subCls,
+      this.Disabled && `${this._prefixCls}-disabled`
+    ].filter(item => !!item);
+
+    this.cd.detectChanges();
+  }
+
+  ngOnInit(): void {
+    this.inited = true;
+  }
+
+  ngOnChanges(changes: { [P in keyof this]?: SimpleChange } & SimpleChanges): void {
+    if (changes.FileList) (this.FileList || []).forEach(file => file.message = this.genErr(file));
+    this.zipOptions()._setClassMap();
+  }
+
+  ngOnDestroy(): void {
+    this.clearProgressTimer();
+  }
 
   private zipOptions(): this {
     if (typeof this.ShowUploadList === 'boolean' && this.ShowUploadList) {
@@ -147,12 +232,6 @@ export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
     return this;
   }
 
-  // endregion
-
-  constructor(private cd: ChangeDetectorRef) {}
-
-  // region: upload
-
   private fileToObject(file: UploadFile): UploadFile {
     return {
       lastModified: file.lastModified,
@@ -183,16 +262,23 @@ export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
     return removed;
   }
 
-  private uploadErrorText = "Error Upload";
+  // endregion
+
+  // region: drag
+
   private genErr(file: UploadFile): string {
     return file.response && typeof file.response === 'string' ?
-            file.response :
-            (file.error && file.error.statusText) || this.uploadErrorText;
+      file.response :
+      (file.error && file.error.statusText) || this.uploadErrorText;
   }
 
   private clearProgressTimer(): void {
     clearInterval(this.progressTimer);
   }
+
+  // endregion
+
+  // region: list
 
   private genPercentAdd(): (s: number) => number {
     let k = 0.1;
@@ -213,6 +299,8 @@ export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
     };
   }
 
+  // endregion
+
   private autoUpdateProgress(file: UploadFile): void {
     const getPercent = this.genPercentAdd();
     let curPercent = 0;
@@ -220,18 +308,18 @@ export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
     this.progressTimer = setInterval(() => {
       curPercent = getPercent(curPercent);
       this.onProgress({
-        percent: curPercent,
+        percent: curPercent
       }, file);
     }, 200);
   }
 
   private genThumb(file: UploadFile): void {
     if (typeof document === 'undefined' ||
-        typeof window === 'undefined' ||
-        !(window as any).FileReader || !(window as any).File ||
-        !(file.originFileObj instanceof File) ||
-        file.thumbUrl !== undefined
-      ) {
+      typeof window === 'undefined' ||
+      !(window as any).FileReader || !(window as any).File ||
+      !(file.originFileObj instanceof File) ||
+      file.thumbUrl !== undefined
+    ) {
       return;
     }
 
@@ -249,13 +337,15 @@ export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
     this.FileList.push(targetItem);
     this.genThumb(targetItem);
     this.FileListChange.emit(this.FileList);
-    this.Change.emit({ file: targetItem, fileList: this.FileList });
+    this.Change.emit({file: targetItem, fileList: this.FileList});
     // fix ie progress
     if (!(window as any).FormData) {
       this.autoUpdateProgress(targetItem);
     }
     this.cd.detectChanges();
-  }
+  };
+
+  // endregion
 
   private onProgress = (e: { percent: number }, file: UploadFile): void => {
     const fileList = this.FileList;
@@ -265,11 +355,11 @@ export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
     targetItem.percent = e.percent;
     this.Change.emit({
       event: e,
-      file: { ...targetItem },
-      fileList: this.FileList,
+      file: {...targetItem},
+      fileList: this.FileList
     });
     this.cd.detectChanges();
-  }
+  };
 
   private onSuccess = (res: any, file: any, xhr?: any): void => {
     this.clearProgressTimer();
@@ -280,11 +370,11 @@ export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
     targetItem.status = 'complete';
     targetItem.response = res;
     this.Change.emit({
-      file: { ...targetItem },
-      fileList,
+      file: {...targetItem},
+      fileList
     });
     this.cd.detectChanges();
-  }
+  };
 
   private onError = (err: any, file: any): void => {
     this.clearProgressTimer();
@@ -296,86 +386,9 @@ export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
     targetItem.status = 'error';
     targetItem.message = this.genErr(file);
     this.Change.emit({
-      file: { ...targetItem },
-      fileList,
+      file: {...targetItem},
+      fileList
     });
     this.cd.detectChanges();
-  }
-
-  // endregion
-
-  // region: drag
-
-  private dragState: string;
-  fileDrop(e: DragEvent): void {
-    if (e.type === this.dragState) return;
-    this.dragState = e.type;
-    this._setClassMap();
-  }
-
-  // endregion
-
-  // region: list
-
-  onRemove = (file: UploadFile): void => {
-    this.upload.abort(file);
-    file.status = 'removed';
-    ((this.Remove ? this.Remove instanceof Observable ? this.Remove : of(this.Remove(file)) : of(true)) as Observable<any>)
-      .pipe(filter((res: boolean) => res))
-      .subscribe(res => {
-        const removedFileList = this.removeFileItem(file, this.FileList);
-        if (removedFileList) {
-          this.FileList = removedFileList;
-          this.Change.emit({
-            file,
-            fileList: removedFileList
-          });
-          this.FileListChange.emit(this.FileList);
-          this.cd.detectChanges();
-        }
-      });
-  }
-
-  // endregion
-
-  // region: styles
-  _prefixCls = 'upload';
-  _classList: string[] = [];
-  _setClassMap(): void {
-    const isDrag = this.Type === 'drag';
-    let subCls: string[] = [];
-    if (this.Type === 'drag') {
-      subCls = [
-        this.FileList.some(file => file.status === 'uploading') && `${this._prefixCls}-drag-uploading`,
-        this.dragState === 'dragover' && `${this._prefixCls}-drag-hover`
-      ];
-    } else {
-      subCls = [
-        `${this._prefixCls}-select-${this.ListType}`
-      ];
-    }
-
-    this._classList = [
-      this._prefixCls,
-      `${this._prefixCls}-${this.Type}`,
-      ...subCls,
-      this.Disabled && `${this._prefixCls}-disabled`
-    ].filter(item => !!item);
-
-    this.cd.detectChanges();
-  }
-  // endregion
-
-  ngOnInit(): void {
-    this.inited = true;
-  }
-
-  ngOnChanges(changes: { [P in keyof this]?: SimpleChange } & SimpleChanges): void {
-    if (changes.FileList) (this.FileList || []).forEach(file => file.message = this.genErr(file));
-    this.zipOptions()._setClassMap();
-  }
-
-  ngOnDestroy(): void {
-    this.clearProgressTimer();
   }
 }

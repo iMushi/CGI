@@ -5,12 +5,12 @@ import { pgTagComponent } from './tag.component';
 import { pgTagControl } from './tag.control.component';
 
 @NgModule({
-  imports     : [ CommonModule, FormsModule ],
+  imports: [CommonModule, FormsModule],
   declarations: [
-    pgTagControl,pgTagComponent
+    pgTagControl, pgTagComponent
   ],
-  exports     : [
-    pgTagControl,pgTagComponent
+  exports: [
+    pgTagControl, pgTagComponent
   ]
 })
 export class pgTagModule {

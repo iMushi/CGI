@@ -1,17 +1,16 @@
-
 $select-prefix-cls: "pg-select";
-$input-height-base:35px;
-$input-height-lg:55px;
-$input-height-sm:25px;
-$input-placeholder-color : lighten( $color-master-dark, 67% );
-$tag-default-color:$color-master;
-$tag-default-bg:$color-master-light;
-$box-shadow-base:"none";
-$zindex-dropdown:999;
-$item-hover-bg:$color-master-lighter;
-$background-color-base:$color-master-lighter;
+$input-height-base: 35px;
+$input-height-lg: 55px;
+$input-height-sm: 25px;
+$input-placeholder-color: lighten($color-master-dark, 67%);
+$tag-default-color: $color-master;
+$tag-default-bg: $color-master-light;
+$box-shadow-base: "none";
+$zindex-dropdown: 999;
+$item-hover-bg: $color-master-lighter;
+$background-color-base: $color-master-lighter;
 
-@mixin selection__clear(){
+@mixin selection__clear() {
   display: inline-block;
   font-style: normal;
   vertical-align: baseline;
@@ -48,6 +47,7 @@ $background-color-base:$color-master-lighter;
   color: $color-info;
   font-size: 12px;
   transition: background .3s ease-in-out;
+
   > ul > li > a {
     padding: 0;
     background-color: #fff;
@@ -55,7 +55,7 @@ $background-color-base:$color-master-lighter;
 
   // arrow
   &-arrow {
-    
+
     position: absolute;
     top: 50%;
     right: 13px;
@@ -63,6 +63,7 @@ $background-color-base:$color-master-lighter;
     margin-top: -6px;
     color: $color-master;
     font: normal normal normal 12px/1 pages-icon;
+
     * {
       display: none;
     }
@@ -111,6 +112,7 @@ $background-color-base:$color-master-lighter;
   &-disabled &-selection {
     background: $color-master-lightest;
     cursor: not-allowed;
+
     &:hover,
     &:focus,
     &:active {
@@ -129,6 +131,7 @@ $background-color-base:$color-master-lighter;
     background: $color-primary;
     color: #aaa;
     padding-right: 10px;
+
     &__remove {
       display: none;
     }
@@ -146,6 +149,7 @@ $background-color-base:$color-master-lighter;
     margin-right: 12px;
     position: relative;
     line-height: $input-height-base;
+
     &:after {
       content: '.';
       visibility: hidden;
@@ -159,17 +163,21 @@ $background-color-base:$color-master-lighter;
     .pg-select-selection--single {
       height: $input-height-lg;
     }
+
     .pg-select-selection__rendered {
       line-height: $input-height-lg - 2px;
     }
+
     .pg-select-selection--multiple {
       min-height: $input-height-lg;
+
       .pg-select-selection__rendered {
         li {
           height: $input-height-lg - 8px;
           line-height: $input-height-lg - 8px;
         }
       }
+
       .pg-select-selection__clear {
         top: $input-height-lg / 2;
       }
@@ -180,17 +188,21 @@ $background-color-base:$color-master-lighter;
     .pg-select-selection--single {
       height: $input-height-sm;
     }
+
     .pg-select-selection__rendered {
       line-height: $input-height-sm - 2px;
     }
+
     .pg-select-selection--multiple {
       min-height: $input-height-sm;
+
       .pg-select-selection__rendered {
         li {
           height: $input-height-sm - 8px;
           line-height: $input-height-sm - 8px;
         }
       }
+
       .pg-select-selection__clear {
         top: $input-height-sm / 2;
       }
@@ -200,6 +212,7 @@ $background-color-base:$color-master-lighter;
   &-disabled &-selection__choice__remove {
     color: $color-info-lighter;
     cursor: default;
+
     &:hover {
       color: $color-info-lighter;
     }
@@ -258,7 +271,7 @@ $background-color-base:$color-master-lighter;
 
     .pg-select-search__field {
       border-width: 0;
-      font-size:14px;
+      font-size: 14px;
       height: 100%;
       width: 100%;
       background: transparent;
@@ -277,13 +290,16 @@ $background-color-base:$color-master-lighter;
     cursor: text;
     padding-bottom: 3px;
     @include clearfix;
-    .pg-select-selection__placeholder{
+
+    .pg-select-selection__placeholder {
       left: 6px;
     }
+
     .pg-select-search--inline {
       width: auto;
       padding: 0;
       max-width: 100%;
+
       .pg-select-search__field {
         max-width: 100%;
         width: 0.75em;
@@ -295,14 +311,16 @@ $background-color-base:$color-master-lighter;
       margin-bottom: -3px;
       height: auto;
     }
-    ul{
+
+    ul {
       padding: 0;
       padding-left: 6px;
       margin: 0;
       list-style: none;
     }
+
     > ul > li,
-    .pg-select-selection__rendered > ul > li { 
+    .pg-select-selection__rendered > ul > li {
       margin-top: 7px;
       height: 21px;
       line-height: 21px;
@@ -320,6 +338,7 @@ $background-color-base:$color-master-lighter;
       overflow: hidden;
       transition: padding .3s ease-in-out;
       padding: 0 10px 0 17px;
+
       &__disabled {
         padding: 0 10px;
       }
@@ -344,9 +363,11 @@ $background-color-base:$color-master-lighter;
       position: absolute;
       left: 4px;
       padding: 0 8px 0 0;
+
       &:hover {
         color: #404040;
       }
+
       &:before {
         content: "\E60A";
       }
@@ -366,6 +387,7 @@ $background-color-base:$color-master-lighter;
       -ms-transform: rotate(180deg);
       transform: rotate(180deg);
     }
+
     .pg-select-selection {
       //@include active();
     }
@@ -375,15 +397,18 @@ $background-color-base:$color-master-lighter;
     .pg-select-arrow {
       display: none;
     }
+
     .pg-select-search--inline {
       height: 100%;
       width: 100%;
       float: none;
     }
+
     .pg-select-search__field__wrap {
       width: 100%;
       height: 100%;
     }
+
     .pg-select-search__field {
       width: 100%;
       height: 100%;
@@ -467,6 +492,7 @@ $background-color-base:$color-master-lighter;
       text-overflow: ellipsis;
       transition: background 0.3s ease;
       font-size: 14px;
+
       &:hover {
         background-color: $item-hover-bg;
       }
@@ -484,6 +510,7 @@ $background-color-base:$color-master-lighter;
 
       &-selected {
         background-color: $color-complete-lighter !important;
+
         &,
         &:hover {
           background-color: $background-color-base;
@@ -542,7 +569,7 @@ $background-color-base:$color-master-lighter;
   }
 }
 
-.pg-select-dropdown{
+.pg-select-dropdown {
   top: 100% !important;
   left: 0 !important;
   position: relative !important;
@@ -550,7 +577,7 @@ $background-color-base:$color-master-lighter;
   margin-top: 0;
   margin-bottom: 4px;
   border: 1px solid $form-control-border-color;
-  border-top:0;
+  border-top: 0;
   border-radius: 0;
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
@@ -558,31 +585,37 @@ $background-color-base:$color-master-lighter;
   z-index: 790;
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
 }
-.pg-select-open{
+
+.pg-select-open {
   border-color: rgba($color-black, .10);
-  background-color:$color-master-lighter;
-  .pg-select-selection{
-    background-color:$color-master-lighter;
+  background-color: $color-master-lighter;
+
+  .pg-select-selection {
+    background-color: $color-master-lighter;
   }
-  .pg-select-selection--multiple{
-    li.pg-select-selection__choice{
+
+  .pg-select-selection--multiple {
+    li.pg-select-selection__choice {
       background: #fff;
     }
   }
-  .pg-select-selection__placeholder{
+
+  .pg-select-selection__placeholder {
     opacity: 1;
   }
 }
 
-.form-group-default-select2{
-  .pg-select-selection{
+.form-group-default-select2 {
+  .pg-select-selection {
     margin-top: 20px;
     border: 0;
   }
-  &.has-error{
-    background-color: rgba($color-danger,.10);
-    .pg-select-selection{
-      background-color: rgba($color-danger,.10);
+
+  &.has-error {
+    background-color: rgba($color-danger, .10);
+
+    .pg-select-selection {
+      background-color: rgba($color-danger, .10);
     }
   }
 }

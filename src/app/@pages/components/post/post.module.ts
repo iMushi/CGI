@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { NgModule,ModuleWithProviders } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { pgPost } from './post.component';
+
 @NgModule({
   declarations: [pgPost],
-  exports     : [pgPost],
-  imports     : [ CommonModule ]
+  exports: [pgPost],
+  imports: [CommonModule]
 })
 
 export class pgPostModule {

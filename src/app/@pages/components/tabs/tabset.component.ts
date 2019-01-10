@@ -13,11 +13,10 @@ import {
   Renderer2,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
-import { toBoolean } from '../util/convert';
 import { pgTabComponent } from './tab.component';
 import { pgTabsNavComponent } from './tabs-nav.component';
 
@@ -36,9 +35,9 @@ export type TabPositionMode = 'horizontal' | 'vertical';
 export type TabType = 'line' | 'fillup' | 'linetriangle';
 
 @Component({
-  selector     : 'pg-tabset',
+  selector: 'pg-tabset',
   encapsulation: ViewEncapsulation.None,
-  template     : `
+  template: `
     <div class="tab-wrapper tab-{{_tabPositionMode}} {{_tabPosition}} {{_type}} {{_extra_tab_class}}"  #hostContent>
       <pg-tabs-nav
         #tabNav
@@ -80,7 +79,7 @@ export type TabType = 'line' | 'fillup' | 'linetriangle';
         </div>
       </div>
     </div>`,
-  styleUrls    : [
+  styleUrls: [
     './tabs.scss'
   ]
 })
@@ -95,10 +94,8 @@ export class pgTabSetComponent implements AfterContentChecked, OnInit, AfterView
   _selectedIndex: number | null = null;
   _isViewInit = false;
   _tabs: pgTabComponent[] = [];
-  _tabAnimation = "";
   _extra_tab_class = "";
   _extra_tabcontent_class = "";
-
   @Input() TabBarExtraTemplate: TemplateRef<void>;
   @ContentChild('TabBarExtraContent') TabBarExtraContent: TemplateRef<void>;
   @ViewChild('tabNav') _tabNav: pgTabsNavComponent;
@@ -107,14 +104,28 @@ export class pgTabSetComponent implements AfterContentChecked, OnInit, AfterView
   @Input() Animated: AnimatedInterface | boolean = true;
   @Input() ShowPagination = true;
   @Input() Hide = false;
+  @Output() SelectChange: EventEmitter<TabChangeEvent> = new EventEmitter<TabChangeEvent>(true);
+  @Input() Size = 'default';
+  _type: TabType = 'line';
+  tabs: pgTabComponent[] = [];
+
+  constructor(private _renderer: Renderer2) {
+  }
+
+  _tabAnimation = "";
 
   @Input()
-  set SelectedIndex(value: number | null) {
-    this._indexToSelect = value;
+  set tabAnimation(value: string) {
+    this._tabAnimation = value;
   }
 
   get SelectedIndex(): number | null {
     return this._selectedIndex;
+  }
+
+  @Input()
+  set SelectedIndex(value: number | null) {
+    this._indexToSelect = value;
   }
 
   @Output()
@@ -122,15 +133,13 @@ export class pgTabSetComponent implements AfterContentChecked, OnInit, AfterView
     return this.SelectChange.pipe(map(event => event.index));
   }
 
-  @Output() SelectChange: EventEmitter<TabChangeEvent> = new EventEmitter<TabChangeEvent>(true);
-
-  @Input() Size = 'default';
-  _type: TabType = 'line';
-  tabs: pgTabComponent[] = [];
+  get TabPosition(): TabPosition {
+    return this._tabPosition;
+  }
 
   @Input()
   set TabPosition(value: TabPosition) {
-    
+
     this._tabPosition = value;
     if ((this._tabPosition === 'top') || (this._tabPosition === 'bottom')) {
       this._tabPositionMode = 'horizontal';
@@ -139,17 +148,18 @@ export class pgTabSetComponent implements AfterContentChecked, OnInit, AfterView
     }
   }
 
-  get TabPosition(): TabPosition {
-    return this._tabPosition;
+  @Input()
+  set extraTabClass(value: string) {
+    this._extra_tab_class = value;
   }
 
   @Input()
-  set extraTabClass(value:string){
-    this._extra_tab_class = value;
-  }
-  @Input()
-  set extraTabContentClass(value:string){
+  set extraTabContentClass(value: string) {
     this._extra_tabcontent_class = value;
+  }
+
+  get Type(): TabType {
+    return this._type;
   }
 
   @Input()
@@ -161,13 +171,12 @@ export class pgTabSetComponent implements AfterContentChecked, OnInit, AfterView
     this._setClassMap();
   }
 
-  @Input()
-  set tabAnimation(value:string){
-    this._tabAnimation = value;
+  get inkBarAnimated(): boolean {
+    return (this.Animated === true) || ((this.Animated as AnimatedInterface).inkBar === true);
   }
 
-  get Type(): TabType {
-    return this._type;
+  get tabPaneAnimated(): boolean {
+    return (this.Animated === true) || ((this.Animated as AnimatedInterface).tabPane === true);
   }
 
   _setPosition(value: TabPosition): void {
@@ -177,12 +186,11 @@ export class pgTabSetComponent implements AfterContentChecked, OnInit, AfterView
   }
 
   clickLabel(index: number): void {
-    if(this._tabs[ index ].Disabled){
+    if (this._tabs[index].Disabled) {
 
-    }
-    else{
+    } else {
       this.SelectedIndex = index;
-      this._tabs[ index ].pgClick.emit();
+      this._tabs[index].pgClick.emit();
     }
   }
 
@@ -223,7 +231,7 @@ export class pgTabSetComponent implements AfterContentChecked, OnInit, AfterView
     const event = new TabChangeEvent();
     event.index = index;
     if (this._tabs && this._tabs.length) {
-      event.tab = this._tabs[ index ];
+      event.tab = this._tabs[index];
       this._tabs.forEach((item, i) => {
         if (i !== index) {
           item.pgDeselect.emit();
@@ -232,16 +240,5 @@ export class pgTabSetComponent implements AfterContentChecked, OnInit, AfterView
       event.tab.pgSelect.emit();
     }
     return event;
-  }
-
-  get inkBarAnimated(): boolean {
-    return (this.Animated === true) || ((this.Animated as AnimatedInterface).inkBar === true);
-  }
-
-  get tabPaneAnimated(): boolean {
-    return (this.Animated === true) || ((this.Animated as AnimatedInterface).tabPane === true);
-  }
-
-  constructor(private _renderer: Renderer2) {
   }
 }

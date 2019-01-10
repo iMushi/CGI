@@ -1,4 +1,5 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
 declare var pg: any;
 
 @Component({
@@ -8,16 +9,19 @@ declare var pg: any;
 })
 export class ContainerComponent implements OnInit {
 
-  _enableHorizontalContainer:boolean = false;
-  _extraClass:string = "";
-  _extraHorizontalClass:string = "";
+  _enableHorizontalContainer: boolean = false;
 
-  constructor() { }
+  constructor() {
+  }
+
+  _extraClass: string = "";
 
   @Input()
   set extraClass(value) {
     this._extraClass = value
   }
+
+  _extraHorizontalClass: string = "";
 
   @Input()
   set extraHorizontalClass(value) {

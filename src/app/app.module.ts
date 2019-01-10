@@ -11,15 +11,7 @@ import { RouterModule } from '@angular/router';
 import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
 // Layouts
-import {
-    BlankComponent,
-    CasualLayout,
-    CondensedComponent,
-    CorporateLayout,
-    ExecutiveLayout,
-    RootLayout,
-    SimplyWhiteLayout
-} from './@pages/layouts';
+import { BlankComponent, CasualLayout, CondensedComponent, CorporateLayout, ExecutiveLayout, RootLayout, SimplyWhiteLayout } from './@pages/layouts';
 // Layout Service - Required
 import { pagesToggleService } from './@pages/services/toggler.service';
 // Shared Layout Components
@@ -35,16 +27,16 @@ import { pgCardModule } from './@pages/components/card/card.module';
 import { pgCardSocialModule } from './@pages/components/card-social/card-social.module';
 // Basic Bootstrap Modules
 import {
-    AccordionModule,
-    AlertModule,
-    BsDropdownModule,
-    ButtonsModule,
-    CollapseModule,
-    ModalModule,
-    ProgressbarModule,
-    TabsModule,
-    TooltipModule,
-    TypeaheadModule
+  AccordionModule,
+  AlertModule,
+  BsDropdownModule,
+  ButtonsModule,
+  CollapseModule,
+  ModalModule,
+  ProgressbarModule,
+  TabsModule,
+  TooltipModule,
+  TypeaheadModule
 } from 'ngx-bootstrap';
 /* Pages Globaly required Components - Optional*/
 import { pgTabsModule } from './@pages/components/tabs/tabs.module';
@@ -80,90 +72,90 @@ import { ExecutiveDashboardComponent } from './dashboard/executive/dashboard.com
 import { BlankCorporateComponent } from './@pages/layouts/blank-corporate/blank-corporate.component';
 import { BlankSimplywhiteComponent } from './@pages/layouts/blank-simplywhite/blank-simplywhite.component';
 import { BlankCasualComponent } from './@pages/layouts/blank-casual/blank-casual.component';
-import { FlashVentasComponent } from './@pages/layouts/flash-ventas/flash-ventas.component';
+import { ConsultaComponent } from './@pages/layouts/consulta/consulta.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-    suppressScrollX: true
+  suppressScrollX: true
 };
 
 //Hammer Config Overide
 //https://github.com/angular/angular/issues/10541
 export class AppHammerConfig extends HammerGestureConfig {
-    overrides = <any>{
-        'pinch': {enable: false},
-        'rotate': {enable: false}
-    };
+  overrides = <any>{
+    'pinch': {enable: false},
+    'rotate': {enable: false}
+  };
 }
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        CondensedComponent,
-        CorporateLayout,
-        SimplyWhiteLayout,
-        ExecutiveLayout,
-        CasualLayout,
-        SidebarComponent, QuickviewComponent, SearchOverlayComponent, HeaderComponent, HorizontalMenuComponent,
-        BlankComponent,
-        RootLayout,
-        CardsComponentPage,
-        ViewsPageComponent,
-        ChartsComponent,
-        SocialComponent,
-        StepsformDirective,
-        CoverpageDirective,
-        CondensedDashboardComponent,
-        SimplyWhiteDashboardComponent,
-        CasualDashboardComponent,
-        CorporateDashboardComponent,
-        ExecutiveDashboardComponent,
-        BlankCorporateComponent,
-        BlankSimplywhiteComponent,
-        BlankCasualComponent,
-        FlashVentasComponent
-    ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        CommonModule,
-        FormsModule,
-        HttpModule,
-        HttpClientModule,
-        SharedModule,
-        ProgressModule,
-        pgListViewModule,
-        pgCardModule,
-        pgCardSocialModule,
-        RouterModule.forRoot(AppRoutes),
-        BsDropdownModule.forRoot(),
-        AccordionModule.forRoot(),
-        AlertModule.forRoot(),
-        ButtonsModule.forRoot(),
-        CollapseModule.forRoot(),
-        ModalModule.forRoot(),
-        ProgressbarModule.forRoot(),
-        TabsModule.forRoot(),
-        TooltipModule.forRoot(),
-        TypeaheadModule.forRoot(),
-        NvD3Module,
-        pgTabsModule,
-        NgxEchartsModule,
-        IsotopeModule,
-        NgxDnDModule,
-        QuillModule,
-        PerfectScrollbarModule,
-        pgSwitchModule,
-        DashboardModule
-    ],
-    providers: [QuickviewService, pagesToggleService, ChartService, SocialService, {
-        provide: PERFECT_SCROLLBAR_CONFIG,
-        useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-    },
-        {
-            provide: HAMMER_GESTURE_CONFIG,
-            useClass: AppHammerConfig
-        }],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    CondensedComponent,
+    CorporateLayout,
+    SimplyWhiteLayout,
+    ExecutiveLayout,
+    CasualLayout,
+    SidebarComponent, QuickviewComponent, SearchOverlayComponent, HeaderComponent, HorizontalMenuComponent,
+    BlankComponent,
+    RootLayout,
+    CardsComponentPage,
+    ViewsPageComponent,
+    ChartsComponent,
+    SocialComponent,
+    StepsformDirective,
+    CoverpageDirective,
+    CondensedDashboardComponent,
+    SimplyWhiteDashboardComponent,
+    CasualDashboardComponent,
+    CorporateDashboardComponent,
+    ExecutiveDashboardComponent,
+    BlankCorporateComponent,
+    BlankSimplywhiteComponent,
+    BlankCasualComponent,
+    ConsultaComponent
+  ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    CommonModule,
+    FormsModule,
+    HttpModule,
+    HttpClientModule,
+    SharedModule,
+    ProgressModule,
+    pgListViewModule,
+    pgCardModule,
+    pgCardSocialModule,
+    RouterModule.forRoot(AppRoutes),
+    BsDropdownModule.forRoot(),
+    AccordionModule.forRoot(),
+    AlertModule.forRoot(),
+    ButtonsModule.forRoot(),
+    CollapseModule.forRoot(),
+    ModalModule.forRoot(),
+    ProgressbarModule.forRoot(),
+    TabsModule.forRoot(),
+    TooltipModule.forRoot(),
+    TypeaheadModule.forRoot(),
+    NvD3Module,
+    pgTabsModule,
+    NgxEchartsModule,
+    IsotopeModule,
+    NgxDnDModule,
+    QuillModule,
+    PerfectScrollbarModule,
+    pgSwitchModule,
+    DashboardModule
+  ],
+  providers: [QuickviewService, pagesToggleService, ChartService, SocialService, {
+    provide: PERFECT_SCROLLBAR_CONFIG,
+    useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+  },
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: AppHammerConfig
+    }],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

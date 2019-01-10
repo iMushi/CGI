@@ -10,9 +10,9 @@ import { pgTabsNavComponent } from './tabs-nav.component';
 import { pgTabSetComponent } from './tabset.component';
 
 @NgModule({
-  declarations: [ pgTabComponent, pgTabSetComponent, pgTabsNavComponent, pgTabLabelDirective, pgTabsInkBarDirective, pgTabBodyComponent ],
-  exports     : [ pgTabComponent, pgTabSetComponent, pgTabsNavComponent, pgTabLabelDirective, pgTabsInkBarDirective, pgTabBodyComponent ],
-  imports     : [ CommonModule, ObserversModule ]
+  declarations: [pgTabComponent, pgTabSetComponent, pgTabsNavComponent, pgTabLabelDirective, pgTabsInkBarDirective, pgTabBodyComponent],
+  exports: [pgTabComponent, pgTabSetComponent, pgTabsNavComponent, pgTabLabelDirective, pgTabsInkBarDirective, pgTabBodyComponent],
+  imports: [CommonModule, ObserversModule]
 })
 export class pgTabsModule {
 }

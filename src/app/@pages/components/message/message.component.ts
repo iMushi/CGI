@@ -1,42 +1,30 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import {
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
-import { MessageConfig } from './message-config';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MessageContainerComponent } from './message-container.component';
 import { MessageDataFilled, MessageDataOptions } from './message.definitions';
+
 declare var pg: any;
 
 
 @Component({
-  selector     : 'pg-message',
+  selector: 'pg-message',
   encapsulation: ViewEncapsulation.None,
-  animations   : [
+  animations: [
     trigger('enterLeave', [
-      state('enter', style({ opacity: 1, transform: 'translateY(0)' })),
+      state('enter', style({opacity: 1, transform: 'translateY(0)'})),
       transition('* => enter', [
-        style({ opacity: 0, transform: 'translateY(-50%)' }),
+        style({opacity: 0, transform: 'translateY(-50%)'}),
         animate('100ms linear')
       ]),
-      state('leave', style({ opacity: 0, transform: 'translateY(-50%)' })),
+      state('leave', style({opacity: 0, transform: 'translateY(-50%)'})),
       transition('* => leave', [
-        style({ opacity: 1, transform: 'translateY(0)' }),
+        style({opacity: 1, transform: 'translateY(0)'}),
         animate('100ms linear')
-      ]),
+      ])
     ])
   ],
-  templateUrl : 'message.component.html',
-  styleUrls    : []
+  templateUrl: 'message.component.html',
+  styleUrls: []
 })
 export class MessageComponent implements OnInit, OnDestroy {
 
@@ -51,7 +39,8 @@ export class MessageComponent implements OnInit, OnDestroy {
   private _eraseTimingStart: number;
   private _eraseTTL: number; // Time to live
 
-  constructor(private _messageContainer: MessageContainerComponent) { }
+  constructor(private _messageContainer: MessageContainerComponent) {
+  }
 
   ngOnInit(): void {
     this._options = this.Message.options;
@@ -91,6 +80,7 @@ export class MessageComponent implements OnInit, OnDestroy {
   onClickClose(): void {
     this._destroy();
   }
+
   // Remove self
   protected _destroy(): void {
     if (this._options.Animate) {

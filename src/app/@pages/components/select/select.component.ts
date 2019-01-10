@@ -5,19 +5,19 @@
 import { DOWN_ARROW, ENTER, TAB } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import {
-  forwardRef,
   AfterContentChecked,
   AfterContentInit,
   Component,
   ElementRef,
   EventEmitter,
+  forwardRef,
   HostListener,
   Input,
   OnInit,
   Output,
   Renderer2,
   ViewChild,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { dropDownAnimation } from '../../animations/dropdown-animations';
@@ -28,31 +28,25 @@ import { pgOptionComponent } from './option.component';
 import { OptionPipe } from './option.pipe';
 
 @Component({
-  selector     : 'pg-select',
+  selector: 'pg-select',
   encapsulation: ViewEncapsulation.None,
-  providers    : [
+  providers: [
     {
-      provide    : NG_VALUE_ACCESSOR,
+      provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => pgSelectComponent),
-      multi      : true
+      multi: true
     }
   ],
-  animations   : [
+  animations: [
     dropDownAnimation,
     tagAnimation
   ],
-  templateUrl:'./select.component.html',
-  styleUrls    : [
-    './style/index.scss',
+  templateUrl: './select.component.html',
+  styleUrls: [
+    './style/index.scss'
   ]
 })
 export class pgSelectComponent implements OnInit, AfterContentInit, AfterContentChecked, ControlValueAccessor {
-  private _allowClear = false;
-  private _disabled = false;
-  private _isTags = false;
-  private _isMultiple = false;
-  private _keepUnListOptions = false;
-  private _showSearch = false;
   _el: HTMLElement;
   _isOpen = false;
   _prefixCls = 'pg-select';
@@ -79,9 +73,6 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
   _dropDownPosition: 'top' | 'center' | 'bottom' = 'bottom';
   _composing = false;
   _mode;
-  // ngModel Access
-  onChange: (value: string | string[]) => void = () => null;
-  onTouched: () => void = () => null;
   @ViewChild('searchInput') searchInputElementRef;
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdownUl') dropdownUl: ElementRef;
@@ -91,10 +82,15 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
   @Input() Filter = true;
   @Input() MaxMultiple = Infinity;
   @ViewChild(CdkConnectedOverlay) _cdkOverlay: CdkConnectedOverlay;
+  private _allowClear = false;
+  private _disabled = false;
+  private _isTags = false;
+  private _isMultiple = false;
+  private _keepUnListOptions = false;
+  private _showSearch = false;
 
-  @Input()
-  set AllowClear(value: boolean) {
-    this._allowClear = toBoolean(value);
+  constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {
+    this._el = this._elementRef.nativeElement;
   }
 
   get AllowClear(): boolean {
@@ -102,12 +98,17 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
   }
 
   @Input()
-  set KeepUnListOptions(value: boolean) {
-    this._keepUnListOptions = toBoolean(value);
+  set AllowClear(value: boolean) {
+    this._allowClear = toBoolean(value);
   }
 
   get KeepUnListOptions(): boolean {
     return this._keepUnListOptions;
+  }
+
+  @Input()
+  set KeepUnListOptions(value: boolean) {
+    this._keepUnListOptions = toBoolean(value);
   }
 
   @Input()
@@ -122,6 +123,10 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     }
   }
 
+  get Multiple(): boolean {
+    return this._isMultiple;
+  }
+
   @Input()
   set Multiple(value: boolean) {
     this._isMultiple = toBoolean(value);
@@ -130,8 +135,8 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     }
   }
 
-  get Multiple(): boolean {
-    return this._isMultiple;
+  get PlaceHolder(): string {
+    return this._placeholder;
   }
 
   @Input()
@@ -139,8 +144,8 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     this._placeholder = value;
   }
 
-  get PlaceHolder(): string {
-    return this._placeholder;
+  get NotFoundContent(): string {
+    return this._notFoundContent;
   }
 
   @Input()
@@ -148,18 +153,18 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     this._notFoundContent = value;
   }
 
-  get NotFoundContent(): string {
-    return this._notFoundContent;
+  get Size(): string {
+    return this._size;
   }
 
   @Input()
   set Size(value: string) {
-    this._size = { large: 'lg', small: 'sm' }[ value ];
+    this._size = {large: 'lg', small: 'sm'}[value];
     this.setClassMap();
   }
 
-  get Size(): string {
-    return this._size;
+  get ShowSearch(): boolean {
+    return this._showSearch;
   }
 
   @Input()
@@ -167,8 +172,8 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     this._showSearch = toBoolean(value);
   }
 
-  get ShowSearch(): boolean {
-    return this._showSearch;
+  get Tags(): boolean {
+    return this._isTags;
   }
 
   @Input()
@@ -178,8 +183,8 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     this.Multiple = isTags;
   }
 
-  get Tags(): boolean {
-    return this._isTags;
+  get Disabled(): boolean {
+    return this._disabled;
   }
 
   @Input()
@@ -189,8 +194,8 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     this.setClassMap();
   }
 
-  get Disabled(): boolean {
-    return this._disabled;
+  get Open(): boolean {
+    return this._isOpen;
   }
 
   @Input()
@@ -213,9 +218,18 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     }
   }
 
-  get Open(): boolean {
-    return this._isOpen;
+  get Value(): string | string[] {
+    return this._value;
   }
+
+  set Value(value: string | string[]) {
+    this._updateValue(value);
+  }
+
+  // ngModel Access
+  onChange: (value: string | string[]) => void = () => null;
+
+  onTouched: () => void = () => null;
 
   /** new -option insert or new tags insert */
   addOption = (option) => {
@@ -227,7 +241,7 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
         this.forceUpdateSelectedOption(this._value);
       }
     }
-  }
+  };
 
   /** -option remove or tags remove */
   removeOption(option: pgOptionComponent): void {
@@ -328,7 +342,7 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
       $event.preventDefault();
       $event.stopPropagation();
     }
-  }
+  };
 
   /** select multiple option */
   selectMultipleOption(option: pgOptionComponent, $event?: MouseEvent): void {
@@ -387,7 +401,7 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
       const selectedOption = this._options.filter((item) => {
         return (item != null) && (item.Value === currentModelValue);
       });
-      this.chooseOption(selectedOption[ 0 ]);
+      this.chooseOption(selectedOption[0]);
     }
   }
 
@@ -396,14 +410,6 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     setTimeout(_ => {
       this.updateSelectedOption(value);
     });
-  }
-
-  get Value(): string | string[] {
-    return this._value;
-  }
-
-  set Value(value: string | string[]) {
-    this._updateValue(value);
   }
 
   clearAllSelectedOption(emitChange: boolean = true): void {
@@ -449,11 +455,11 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
   }
 
   preOption(option: pgOptionComponent, options: pgOptionComponent[]): pgOptionComponent {
-    return options[ options.indexOf(option) - 1 ] || options[ options.length - 1 ];
+    return options[options.indexOf(option) - 1] || options[options.length - 1];
   }
 
   nextOption(option: pgOptionComponent, options: pgOptionComponent[]): pgOptionComponent {
-    return options[ options.indexOf(option) + 1 ] || options[ 0 ];
+    return options[options.indexOf(option) + 1] || options[0];
   }
 
   clearSearchText(): void {
@@ -464,11 +470,11 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
   updateFilterOption(updateActiveFilter: boolean = true): void {
     if (this.Filter) {
       this._filterOptions = new OptionPipe().transform(this._options, {
-        'searchText'     : this._searchText,
-        'tags'           : this._isTags,
+        'searchText': this._searchText,
+        'tags': this._isTags,
         'notFoundContent': this._isTags ? this._searchText : this._notFoundContent,
-        'disabled'       : !this._isTags,
-        'value'          : this._isTags ? this._searchText : 'disabled'
+        'disabled': !this._isTags,
+        'value': this._isTags ? this._searchText : 'disabled'
       });
     } else {
       this._filterOptions = this._options;
@@ -476,7 +482,7 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
 
     /** TODO: cause pre & next key selection not work */
     if (updateActiveFilter && !this._selectedOption) {
-      this._activeFilterOption = this._filterOptions[ 0 ];
+      this._activeFilterOption = this._filterOptions[0];
     }
   }
 
@@ -484,7 +490,7 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     this.SearchChange.emit(searchValue);
   }
 
-  @HostListener('click', [ '$event' ])
+  @HostListener('click', ['$event'])
   onClick(e: MouseEvent): void {
     e.preventDefault();
     if (!this._disabled) {
@@ -498,7 +504,7 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     }
   }
 
-  @HostListener('keydown', [ '$event' ])
+  @HostListener('keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
     const keyCode = e.keyCode;
     if (keyCode === TAB && this.Open) {
@@ -551,20 +557,20 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
       this._renderer.addClass(this._el, _className);
     });
     this._selectionClassMap = {
-      [this._selectionPrefixCls]               : true,
-      [`${this._selectionPrefixCls}--single`]  : !this.Multiple,
+      [this._selectionPrefixCls]: true,
+      [`${this._selectionPrefixCls}--single`]: !this.Multiple,
       [`${this._selectionPrefixCls}--multiple`]: this.Multiple
     };
   }
 
   setDropDownClassMap(): void {
     this._dropDownClassMap = {
-      [this._dropDownPrefixCls]                          : true,
-      ['component-select']                               : this._mode === 'combobox',
-      [`${this._dropDownPrefixCls}--single`]             : !this.Multiple,
-      [`${this._dropDownPrefixCls}--multiple`]           : this.Multiple,
+      [this._dropDownPrefixCls]: true,
+      ['component-select']: this._mode === 'combobox',
+      [`${this._dropDownPrefixCls}--single`]: !this.Multiple,
+      [`${this._dropDownPrefixCls}--multiple`]: this.Multiple,
       [`${this._dropDownPrefixCls}-placement-bottomLeft`]: this._dropDownPosition === 'bottom',
-      [`${this._dropDownPrefixCls}-placement-topLeft`]   : this._dropDownPosition === 'top'
+      [`${this._dropDownPrefixCls}-placement-topLeft`]: this._dropDownPosition === 'top'
     };
   }
 
@@ -574,7 +580,7 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
       if (this._activeFilterOption && this._activeFilterOption.Value) {
         const index = this._filterOptions.findIndex(option => option.Value === this._activeFilterOption.Value);
         try {
-          const scrollPane = this.dropdownUl.nativeElement.children[ index ] as HTMLLIElement;
+          const scrollPane = this.dropdownUl.nativeElement.children[index] as HTMLLIElement;
           // TODO: scrollIntoViewIfNeeded is not a standard API, why doing so?
           /* tslint:disable-next-line:no-any */
           (scrollPane as any).scrollIntoViewIfNeeded(false);
@@ -635,10 +641,6 @@ export class pgSelectComponent implements OnInit, AfterContentInit, AfterContent
     if (this.dropdownUl && (this.dropdownUl.nativeElement.scrollHeight === this.dropdownUl.nativeElement.clientHeight)) {
       this.ScrollToBottom.emit(true);
     }
-  }
-
-  constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {
-    this._el = this._elementRef.nativeElement;
   }
 
   ngAfterContentInit(): void {

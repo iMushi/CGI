@@ -1,6 +1,20 @@
 // tslint:disable:no-any ordered-imports
-import { Component, ViewChild, ElementRef, HostListener, OnInit, OnChanges, OnDestroy, SimpleChange, SimpleChanges, ChangeDetectorRef, Input, Renderer2, Optional } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpHeaders } from '@angular/common/http';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Renderer2,
+  SimpleChange,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import { HttpClient, HttpEventType, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ZipButtonOptions } from './interface';
@@ -8,9 +22,9 @@ import { ZipButtonOptions } from './interface';
 @Component({
   selector: '[pg-upload-btn]',
   template: `
-  <input type="file" #file (change)="onChange($event)"
-    [attr.accept]="options.accept" [multiple]="options.multiple" style="display: none;">
-  <ng-content></ng-content>
+    <input type="file" #file (change)="onChange($event)"
+           [attr.accept]="options.accept" [multiple]="options.multiple" style="display: none;">
+    <ng-content></ng-content>
   `,
   host: {
     '[class.upload]': 'true',
@@ -20,18 +34,23 @@ import { ZipButtonOptions } from './interface';
   preserveWhitespaces: false
 })
 export class pgUploadBtnComponent implements OnInit, OnChanges, OnDestroy {
+  @ViewChild('file') file: ElementRef;
+  @Input() classes: string[] = [];
+  @Input() options: ZipButtonOptions;
+  // region: styles
+  _prefixCls = 'ant-upload';
+
+  // region: fields
+  _classList: string[] = [];
   private reqs: { [key: string]: Subscription } = {};
+
+  // endregion
   private inited = false;
   private destroy = false;
 
-  @ViewChild('file') file: ElementRef;
-
-  // region: fields
-
-  @Input() classes: string[] = [];
-  @Input() options: ZipButtonOptions;
-
-  // endregion
+  constructor(@Optional() private http: HttpClient, private _el: ElementRef, private _renderer: Renderer2, private cd: ChangeDetectorRef) {
+    if (!http) throw new Error(`Not found 'HttpClient', You can import 'HttpClientModel' in your root module.`);
+  }
 
   @HostListener('click')
   onClick(): void {
@@ -69,6 +88,55 @@ export class pgUploadBtnComponent implements OnInit, OnChanges, OnDestroy {
     e.target.value = '';
   }
 
+  abort(file?: any): void {
+    if (file) {
+      let uid: any = file;
+      if (file && file.uid) {
+        uid = file.uid;
+      }
+      if (this.reqs[uid]) {
+        this.reqs[uid].unsubscribe();
+        delete this.reqs[uid];
+      }
+    } else {
+      Object.keys(this.reqs).forEach((uid) => {
+        if (this.reqs[uid]) {
+          this.reqs[uid].unsubscribe();
+        }
+
+        delete this.reqs[uid];
+      });
+    }
+  }
+
+  _setClassMap(): void {
+    this._classList.forEach(cls => this._renderer.removeClass(this._el.nativeElement, cls));
+    this._classList = [
+      this._prefixCls,
+      this.options.disabled && `${this._prefixCls}-disabled`,
+      ...this.classes
+    ].filter(item => !!item);
+
+    this._classList.forEach(cls => this._renderer.addClass(this._el.nativeElement, cls));
+    this.cd.detectChanges();
+  }
+
+  ngOnInit(): void {
+    this.inited = true;
+    this._setClassMap();
+  }
+
+  ngOnChanges(changes: { [P in keyof this]?: SimpleChange } & SimpleChanges): void {
+    if (this.inited) {
+      this._setClassMap();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy = true;
+    this.abort();
+  }
+
   private attrAccept(file: any, acceptedFiles: any): boolean {
     if (file && acceptedFiles) {
       const acceptedFilesArray = Array.isArray(acceptedFiles)
@@ -91,6 +159,8 @@ export class pgUploadBtnComponent implements OnInit, OnChanges, OnDestroy {
     }
     return true;
   }
+
+  // endregion
 
   private uploadFiles(fileList: any[]): void {
     let postFiles: any[] = Array.prototype.slice.call(fileList);
@@ -127,8 +197,8 @@ export class pgUploadBtnComponent implements OnInit, OnChanges, OnDestroy {
     if (this.destroy) return;
     const opt = this.options;
     const request = opt.customRequest || this.xhr;
-    const { uid } = file;
-    let { data } = opt;
+    const {uid} = file;
+    let {data} = opt;
     if (typeof data === 'function') {
       data = data(file);
     }
@@ -184,62 +254,5 @@ export class pgUploadBtnComponent implements OnInit, OnChanges, OnDestroy {
       this.abort(args);
       args.onError(err);
     });
-  }
-
-  abort(file?: any): void {
-    if (file) {
-      let uid: any = file;
-      if (file && file.uid) {
-        uid = file.uid;
-      }
-      if (this.reqs[uid]) {
-        this.reqs[uid].unsubscribe();
-        delete this.reqs[uid];
-      }
-    } else {
-      Object.keys(this.reqs).forEach((uid) => {
-        if (this.reqs[uid]) {
-          this.reqs[uid].unsubscribe();
-        }
-
-        delete this.reqs[uid];
-      });
-    }
-  }
-
-  // region: styles
-  _prefixCls = 'ant-upload';
-  _classList: string[] = [];
-  _setClassMap(): void {
-    this._classList.forEach(cls => this._renderer.removeClass(this._el.nativeElement, cls));
-    this._classList = [
-      this._prefixCls,
-      this.options.disabled && `${this._prefixCls}-disabled`,
-      ...this.classes
-    ].filter(item => !!item);
-
-    this._classList.forEach(cls => this._renderer.addClass(this._el.nativeElement, cls));
-    this.cd.detectChanges();
-  }
-  // endregion
-
-  constructor(@Optional() private http: HttpClient, private _el: ElementRef, private _renderer: Renderer2, private cd: ChangeDetectorRef) {
-    if (!http) throw new Error(`Not found 'HttpClient', You can import 'HttpClientModel' in your root module.`);
-  }
-
-  ngOnInit(): void {
-    this.inited = true;
-    this._setClassMap();
-  }
-
-  ngOnChanges(changes: { [P in keyof this]?: SimpleChange } & SimpleChanges): void {
-    if (this.inited) {
-      this._setClassMap();
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.destroy = true;
-    this.abort();
   }
 }

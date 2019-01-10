@@ -1,4 +1,3 @@
-
 @mixin clearfix() {
   &:before,
   &:after {
@@ -31,40 +30,41 @@
   width: $width;
   height: $height;
 }
+
 @mixin square($size) {
   @include size($size, $size);
 }
 
-@mixin flexbox(){
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
+@mixin flexbox() {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
-@mixin flex-inline(){
-    display: -webkit-inline-box;
-    display: -webkit-inline-flex;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
+@mixin flex-inline() {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
 }
 
-@mixin align-items($argument){
-    -webkit-box-align: $argument;
-    -webkit-align-items: $argument;
-    -ms-flex-align: $argument;
-    align-items: $argument;
+@mixin align-items($argument) {
+  -webkit-box-align: $argument;
+  -webkit-align-items: $argument;
+  -ms-flex-align: $argument;
+  align-items: $argument;
 }
 
-@mixin flex-column{
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
+@mixin flex-column {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 
-@mixin flex-row{
+@mixin flex-row {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
   -webkit-flex-direction: row;
@@ -75,11 +75,27 @@
 
 // Placeholder text
 @mixin placeholder($color: $input-color-placeholder) {
-  &:-moz-placeholder            { color: $color; } // Firefox 4-18
-  &::-moz-placeholder           { color: $color; opacity: 1; } // Firefox 19+
-  &:-ms-input-placeholder       { color: $color; } // Internet Explorer 10+
-  &::-webkit-input-placeholder  { color: $color; } // Safari and Chrome
-  &.placeholder                 { color: $color; } // Fallback
+  &:-moz-placeholder {
+    color: $color;
+  }
+  // Firefox 4-18
+  &::-moz-placeholder {
+    color: $color;
+    opacity: 1;
+  }
+  // Firefox 19+
+  &:-ms-input-placeholder {
+    color: $color;
+  }
+  // Internet Explorer 10+
+  &::-webkit-input-placeholder {
+    color: $color;
+  }
+  // Safari and Chrome
+  &.placeholder {
+    color: $color;
+  }
+  // Fallback
 }
 
 // Placeholder text
@@ -124,14 +140,14 @@
 }
 
 @mixin invisible() {
-  visibility:hidden;
+  visibility: hidden;
 }
 
 //Padding Helper Classes
 @mixin generate-paddings-options-prefix($prefix,$n, $j: 0) {
   @if $j <= $n {
     @for $i from $j through $n {
-      $step : $i*5;  
+      $step: $i*5;
       .#{$prefix}-p-t-#{$step} {
         padding-top: ($step*1px) !important;
       }
@@ -148,11 +164,12 @@
     }
   }
 }
+
 //Margins Helper Classes
 @mixin generate-margin-options-prefix($prefix,$n, $j: 0) {
   @if $j <= $n {
     @for $i from $j through $n {
-      $step : $i*5;  
+      $step: $i*5;
       .#{$prefix}-m-t-#{$step} {
         margin-top: ($step*1px) !important;
       }
@@ -169,144 +186,167 @@
     }
   }
 }
+
 // CSS3 PROPERTIES
 // --------------------------------------------------
 
 @mixin mask($arguments) {
   -webkit-mask: $arguments;
-          mask: $arguments;
+  mask: $arguments;
 }
+
 @mixin box_scale($scale) {
-    -webkit-transform: scale($scale);  
-      -ms-transform: scale($scale); 
-      -moz-transform: scale($scale); 
-          transform: scale($scale); 
+  -webkit-transform: scale($scale);
+  -ms-transform: scale($scale);
+  -moz-transform: scale($scale);
+  transform: scale($scale);
 }
+
 // Single side border-radius
 @mixin border-top-radius($radius) {
   border-top-right-radius: $radius;
-   border-top-left-radius: $radius;
+  border-top-left-radius: $radius;
 }
+
 @mixin border-right-radius($radius) {
   border-bottom-right-radius: $radius;
-     border-top-right-radius: $radius;
+  border-top-right-radius: $radius;
 }
+
 @mixin border-bottom-radius($radius) {
   border-bottom-right-radius: $radius;
-   border-bottom-left-radius: $radius;
+  border-bottom-left-radius: $radius;
 }
+
 @mixin border-left-radius($radius) {
   border-bottom-left-radius: $radius;
-     border-top-left-radius: $radius;
+  border-top-left-radius: $radius;
 }
+
 @mixin border-radius($radius) {
-   border-radius: $radius;
-   -webkit-border-radius:$radius;
-   -moz-border-radius: $radius;
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
 }
+
 // Drop shadows
 @mixin box-shadow($shadow) {
   -webkit-box-shadow: $shadow; // iOS <4.3 & Android <4.1
-          box-shadow: $shadow;
+  box-shadow: $shadow;
 }
 
 @mixin animation($properties) {
   -webkit-animation: $properties;
-     -moz-animation: $properties;
-       -o-animation: $properties;
-          animation: $properties;
+  -moz-animation: $properties;
+  -o-animation: $properties;
+  animation: $properties;
 }
 
 // Transitions
 @mixin transition($transition) {
   -webkit-transition: $transition;
-          transition: $transition;
+  transition: $transition;
 }
+
 @mixin transition-property($transition-property) {
   -webkit-transition-property: $transition-property;
-          transition-property: $transition-property;
+  transition-property: $transition-property;
 }
+
 @mixin transition-delay($transition-delay) {
   -webkit-transition-delay: $transition-delay;
-          transition-delay: $transition-delay;
+  transition-delay: $transition-delay;
 }
+
 @mixin transition-duration($transition-duration) {
   -webkit-transition-duration: $transition-duration;
-          transition-duration: $transition-duration;
+  transition-duration: $transition-duration;
 }
+
 @mixin transition-transform($transition) {
   -webkit-transition: -webkit-transform $transition;
-     -moz-transition: -moz-transform $transition;
-       -o-transition: -o-transform $transition;
-          transition: transform $transition;
+  -moz-transition: -moz-transform $transition;
+  -o-transition: -o-transform $transition;
+  transition: transform $transition;
 }
 
 // Transformations
 @mixin rotate($degrees) {
   -webkit-transform: rotate($degrees);
-      -ms-transform: rotate($degrees); // IE9+
-          transform: rotate($degrees);
+  -ms-transform: rotate($degrees); // IE9+
+  transform: rotate($degrees);
 }
+
 @mixin scale($ratio) {
   -webkit-transform: scale($ratio);
-      -ms-transform: scale($ratio); // IE9+
-          transform: scale($ratio);
+  -ms-transform: scale($ratio); // IE9+
+  transform: scale($ratio);
 }
+
 @mixin translate($x, $y) {
   -webkit-transform: translate($x, $y);
-      -ms-transform: translate($x, $y); // IE9+
-          transform: translate($x, $y);
+  -ms-transform: translate($x, $y); // IE9+
+  transform: translate($x, $y);
 }
+
 @mixin translateY($y) {
   -webkit-transform: translateY($y);
-      -ms-transform: translateY($y); // IE9+
-          transform: translateY($y);
+  -ms-transform: translateY($y); // IE9+
+  transform: translateY($y);
 }
+
 @mixin translateX($x) {
   -webkit-transform: translateX($x);
-      -ms-transform: translateX($x); // IE9+
-          transform: translateX($x);
+  -ms-transform: translateX($x); // IE9+
+  transform: translateX($x);
 }
+
 @mixin skew($x, $y) {
   -webkit-transform: skew($x, $y);
-      -ms-transform: skewX($x) skewY($y); // See https://github.com/twbs/bootstrap/issues/4885; IE9+
-          transform: skew($x, $y);
+  -ms-transform: skewX($x) skewY($y); // See https://github.com/twbs/bootstrap/issues/4885; IE9+
+  transform: skew($x, $y);
 }
+
 @mixin translate3d($x, $y, $z) {
   -webkit-transform: translate3d($x, $y, $z);
-          transform: translate3d($x, $y, $z);
-      -ms-transform:translate($x, $y);
+  transform: translate3d($x, $y, $z);
+  -ms-transform: translate($x, $y);
 }
 
 @mixin rotateX($degrees) {
   -webkit-transform: rotateX($degrees);
-      -ms-transform: rotateX($degrees); // IE9+
-          transform: rotateX($degrees);
+  -ms-transform: rotateX($degrees); // IE9+
+  transform: rotateX($degrees);
 }
+
 @mixin rotateY($degrees) {
   -webkit-transform: rotateY($degrees);
-      -ms-transform: rotateY($degrees); // IE9+
-          transform: rotateY($degrees);
+  -ms-transform: rotateY($degrees); // IE9+
+  transform: rotateY($degrees);
 }
+
 @mixin perspective($perspective) {
   -webkit-perspective: $perspective;
-     -moz-perspective: $perspective;
-          perspective: $perspective;
+  -moz-perspective: $perspective;
+  perspective: $perspective;
 }
+
 @mixin perspective-origin($perspective) {
   -webkit-perspective-origin: $perspective;
-     -moz-perspective-origin: $perspective;
-          perspective-origin: $perspective;
+  -moz-perspective-origin: $perspective;
+  perspective-origin: $perspective;
 }
+
 @mixin transform-origin($origin) {
   -webkit-transform-origin: $origin;
-     -moz-transform-origin: $origin;
-          transform-origin: $origin;
+  -moz-transform-origin: $origin;
+  transform-origin: $origin;
 }
+
 @mixin transform-style($style) {
   -webkit-transform-style: $style;
-    -moz-transform-style: $style;
-      transform-style: $style;
+  -moz-transform-style: $style;
+  transform-style: $style;
 }
 
 // Backface visibility
@@ -315,32 +355,32 @@
 // See git pull https://github.com/dannykeane/bootstrap.git backface-visibility for examples
 @mixin backface-visibility($visibility) {
   -webkit-backface-visibility: $visibility;
-     -moz-backface-visibility: $visibility;
-          backface-visibility: $visibility;
+  -moz-backface-visibility: $visibility;
+  backface-visibility: $visibility;
 }
 
 // Background clip
 @mixin background-clip($clip: border-box) {
   -webkit-background-clip: $clip;
-     -moz-background-clip: $clip;
-          background-clip: $clip;
+  -moz-background-clip: $clip;
+  background-clip: $clip;
 }
 
 // Box sizing
 @mixin box-sizing($boxmodel) {
   -webkit-box-sizing: $boxmodel;
-     -moz-box-sizing: $boxmodel;
-          box-sizing: $boxmodel;
+  -moz-box-sizing: $boxmodel;
+  box-sizing: $boxmodel;
 }
 
 // User select
 // For selecting text on the page
 @mixin user-select($select) {
   -webkit-user-select: $select;
-     -moz-user-select: $select;
-      -ms-user-select: $select; // IE10+
-       -o-user-select: $select;
-          user-select: $select;
+  -moz-user-select: $select;
+  -ms-user-select: $select; // IE10+
+  -o-user-select: $select;
+  user-select: $select;
 }
 
 // Resize anything
@@ -352,21 +392,21 @@
 // CSS3 Content Columns
 @mixin content-columns($column-count, $column-gap: $grid-gutter-width) {
   -webkit-column-count: $column-count;
-     -moz-column-count: $column-count;
-          column-count: $column-count;
+  -moz-column-count: $column-count;
+  column-count: $column-count;
   -webkit-column-gap: $column-gap;
-     -moz-column-gap: $column-gap;
-          column-gap: $column-gap;
+  -moz-column-gap: $column-gap;
+  column-gap: $column-gap;
 }
 
 // Optional hyphenation
 @mixin hyphens($mode: auto) {
   word-wrap: break-word;
   -webkit-hyphens: $mode;
-     -moz-hyphens: $mode;
-      -ms-hyphens: $mode; // IE10+
-       -o-hyphens: $mode;
-          hyphens: $mode;
+  -moz-hyphens: $mode;
+  -ms-hyphens: $mode; // IE10+
+  -o-hyphens: $mode;
+  hyphens: $mode;
 }
 
 // Opacity
@@ -376,7 +416,6 @@
   $opacity-ie: ($opacity * 100);
   filter: alpha(opacity=$opacity-ie);
 }
-
 
 
 // GRADIENTS
@@ -392,7 +431,7 @@
     background-image: -webkit-gradient(linear, $start-percent top, $end-percent top, from($start-color), to($end-color)); // Safari 4+, Chrome 2+
     background-image: -webkit-linear-gradient(left, color-stop($start-color $start-percent), color-stop($end-color $end-percent)); // Safari 5.1+, Chrome 10+
     background-image: -moz-linear-gradient(left, $start-color $start-percent, $end-color $end-percent); // FF 3.6+
-    background-image:  linear-gradient(to right, $start-color $start-percent, $end-color $end-percent); // Standard, IE10
+    background-image: linear-gradient(to right, $start-color $start-percent, $end-color $end-percent); // Standard, IE10
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=1); // IE9 and down
   }
@@ -404,7 +443,7 @@
   @mixin vertical($start-color: #555, $end-color: #333, $start-percent: 0%, $end-percent: 100%) {
     background-image: -webkit-gradient(linear, left $start-percent, left $end-percent, from($start-color), to($end-color)); // Safari 4+, Chrome 2+
     background-image: -webkit-linear-gradient(top, $start-color, $start-percent, $end-color, $end-percent); // Safari 5.1+, Chrome 10+
-    background-image:  -moz-linear-gradient(top, $start-color $start-percent, $end-color $end-percent); // FF 3.6+
+    background-image: -moz-linear-gradient(top, $start-color $start-percent, $end-color $end-percent); // FF 3.6+
     background-image: linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent); // Standard, IE10
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=0); // IE9 and down
@@ -456,7 +495,6 @@
 }
 
 
-
 // Retina images
 //
 // Short retina mixin for setting background-image and -size
@@ -464,13 +502,12 @@
 @mixin img-retina($file-1x, $file-2x, $width-1x, $height-1x) {
   background-image: url("${file-1x}");
 
-  @media
-  only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (   min--moz-device-pixel-ratio: 2),
-  only screen and (     -o-min-device-pixel-ratio: 2/1),
-  only screen and (        min-device-pixel-ratio: 2),
-  only screen and (                min-resolution: 192dpi),
-  only screen and (                min-resolution: 2dppx) {
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (min--moz-device-pixel-ratio: 2),
+  only screen and (-o-min-device-pixel-ratio: 2/1),
+  only screen and (min-device-pixel-ratio: 2),
+  only screen and (min-resolution: 192dpi),
+  only screen and (min-resolution: 2dppx) {
     background-image: url("${file-2x}");
     background-size: $width-1x $height-1x;
   }
@@ -524,6 +561,7 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-lighten-color($foreground, $background) {
   @if $background > $foreground {
     $foreground: $background;
@@ -541,6 +579,7 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-darken-color($foreground, $background) {
   @if $background < $foreground {
     $foreground: $background;
@@ -596,11 +635,11 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-lineardodge-color($foreground, $background) {
   @if $background + $foreground > 255 {
     $foreground: 255;
-  }
-  @else {
+  } @else {
     $foreground: $background + $foreground;
   }
   @return $foreground;
@@ -616,11 +655,11 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-linearburn-color($foreground, $background) {
   @if $background + $foreground < 255 {
     $foreground: 0;
-  }
-  @else {
+  } @else {
     $foreground: $background + $foreground - 255;
   }
   @return $foreground;
@@ -647,6 +686,7 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-screen-color($foreground, $background) {
   @return (255 - ( ( (255 - $foreground) * (255 - $background)) / 256));
 }
@@ -661,6 +701,7 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-exclusion-color($foreground, $background) {
   @return $background - ($background * (2 / 255) - 1) * $foreground;
 }
@@ -675,6 +716,7 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-overlay-color($foreground, $background) {
   @if $background <= 255 / 2 {
     $foreground: (2 * $background * $foreground) / 255;
@@ -694,6 +736,7 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-softlight-color($foreground, $background) {
   @if $background < 128 {
     $foreground: (($foreground / 2) + 64) * $background * (2 / 255);
@@ -713,6 +756,7 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-hardlight-color($foreground, $background) {
   $tmp-blend: $foreground;
   @if $tmp-blend < 128 {
@@ -733,6 +777,7 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-colordodge-color($foreground, $background) {
   $tmp: $background * 256 / (255 - $foreground);
   @if $tmp > 255 or $foreground == 255 {
@@ -753,6 +798,7 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-colorburn-color($foreground, $background) {
   $tmp: (255 - ((255 - $background) * 255) / $foreground);
 }
@@ -767,6 +813,7 @@
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-linearlight-color($foreground, $background) {
   @if $foreground < 128 {
     $foreground: blend-linearburn-color($background, 2 * $foreground);
@@ -800,9 +847,9 @@
 // Pin Light
 //--------------------------------
 @function blend-pinlight ($foreground, $background) {
-  $bm-red:   blend-pinlight-color(red($foreground), red($background));
+  $bm-red: blend-pinlight-color(red($foreground), red($background));
   $bm-green: blend-pinlight-color(green($foreground), green($background));
-  $bm-blue:  blend-pinlight-color(blue($foreground), blue($background));
+  $bm-blue: blend-pinlight-color(blue($foreground), blue($background));
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
@@ -869,10 +916,11 @@
 @function blend-divide ($foreground, $background) {
   $bm-red: blend-divide-colors(red($foreground), red($background));
   $bm-green: blend-divide-colors(green($foreground), green($background));
-  $bm-blue:blend-divide-colors(blue($foreground), blue($background));
+  $bm-blue: blend-divide-colors(blue($foreground), blue($background));
 
   @return blend-normal(rgba($bm-red, $bm-green, $bm-blue, opacity($foreground)), $background);
 }
+
 @function blend-divide-colors($foreground, $background) {
   @return min((($background / 255) / ($foreground / 255)) * 255, 255);
 }

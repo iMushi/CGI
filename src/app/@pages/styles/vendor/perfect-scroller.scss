@@ -1,8 +1,8 @@
 /*
  * Container style
  */
-$base-scroll-color : #697686;
- .ps {
+$base-scroll-color: #697686;
+.ps {
   overflow: hidden !important;
   overflow-anchor: none;
   -ms-overflow-style: none;
@@ -98,7 +98,7 @@ $base-scroll-color : #697686;
 
 .ps__rail-x {
   &:hover > .ps__thumb-x, &:focus > .ps__thumb-x {
-    background-color:$base-scroll-color;
+    background-color: $base-scroll-color;
     height: 7px;
     opacity: 1;
   }
@@ -106,7 +106,7 @@ $base-scroll-color : #697686;
 
 .ps__rail-y {
   &:hover > .ps__thumb-y, &:focus > .ps__thumb-y {
-    background-color:$base-scroll-color;
+    background-color: $base-scroll-color;
     width: 7px;
     opacity: 1;
   }

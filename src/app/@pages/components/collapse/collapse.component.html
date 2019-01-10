@@ -1,10 +1,10 @@
-<div class="card-header" [attr.aria-expanded]="_active" (click)="clickHeader($event)" role="tab">
+<div (click)="clickHeader($event)" [attr.aria-expanded]="_active" class="card-header" role="tab">
   <ng-template [ngIf]="Title">
-      <h4 class="card-title">
-        <a href="javascript:;" [ngClass]="{'collapsed':!_active}">
+    <h4 class="card-title">
+      <a [ngClass]="{'collapsed':!_active}" href="javascript:">
         {{ Title }}
-        </a>
-      </h4>
+      </a>
+    </h4>
   </ng-template>
   <ng-template [ngIf]="!Title">
     <ng-content select="[collapse-title]"></ng-content>

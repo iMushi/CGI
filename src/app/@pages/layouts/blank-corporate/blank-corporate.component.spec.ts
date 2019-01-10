@@ -8,9 +8,8 @@ describe('BlankCorporateComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BlankCorporateComponent ]
-    })
-    .compileComponents();
+      declarations: [BlankCorporateComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

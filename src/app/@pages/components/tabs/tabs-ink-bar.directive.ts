@@ -11,23 +11,22 @@ export type TabPositionMode = 'horizontal' | 'vertical';
   }
 })
 export class pgTabsInkBarDirective {
+  @Input() PositionMode: TabPositionMode = 'horizontal';
   private _animated = false;
 
-  @Input()
-  @HostBinding('class.nav-item-animated')
-  set Animated(value: boolean) {
-    this._animated = toBoolean(value);
+  constructor(private _renderer: Renderer2,
+              private _elementRef: ElementRef,
+              private _ngZone: NgZone) {
   }
 
   get Animated(): boolean {
     return this._animated;
   }
 
-  @Input() PositionMode: TabPositionMode = 'horizontal';
-
-  constructor(private _renderer: Renderer2,
-              private _elementRef: ElementRef,
-              private _ngZone: NgZone) {
+  @Input()
+  @HostBinding('class.nav-item-animated')
+  set Animated(value: boolean) {
+    this._animated = toBoolean(value);
   }
 
   alignToElement(element: HTMLElement): void {

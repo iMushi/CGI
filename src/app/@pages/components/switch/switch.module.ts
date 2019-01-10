@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { pgSwitchComponent } from './switch.component';
 
 @NgModule({
-  exports     : [ pgSwitchComponent ],
-  declarations: [ pgSwitchComponent ],
-  imports     : [ CommonModule ]
+  exports: [pgSwitchComponent],
+  declarations: [pgSwitchComponent],
+  imports: [CommonModule]
 })
 export class pgSwitchModule {
 }

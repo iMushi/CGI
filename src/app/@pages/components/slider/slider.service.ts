@@ -30,8 +30,14 @@ export class SliderService {
 
   correctNumLimit(num: number, min: number, max: number): number {
     let res = +num;
-    if (isNaN(res)) { return min; }
-    if (num < min) { res = min; } else if (num > max) { res = max; }
+    if (isNaN(res)) {
+      return min;
+    }
+    if (num < min) {
+      res = min;
+    } else if (num > max) {
+      res = max;
+    }
     return res;
   }
 
@@ -45,7 +51,7 @@ export class SliderService {
     // Running getBoundingClientRect on a
     // disconnected node in IE throws an error
     if (!elem.getClientRects().length) {
-      return { top: 0, left: 0 };
+      return {top: 0, left: 0};
     }
     // Get document-relative position by adding viewport scroll to viewport-relative gBCR
     const rect = elem.getBoundingClientRect();

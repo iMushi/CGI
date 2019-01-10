@@ -113,10 +113,11 @@ $assets-url: "../../assets" !global;
 
 //Feather Icons overides - only for NG version
 .icon-thumbnail {
-  & > *{
+  & > * {
     width: 16px !important;
     height: 16px !important;
   }
+
   svg {
     width: auto;
     height: auto;

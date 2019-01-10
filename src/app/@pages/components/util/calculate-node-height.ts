@@ -25,13 +25,13 @@ const SIZING_STYLE = [
   'padding-left',
   'padding-right',
   'border-width',
-  'box-sizing',
+  'box-sizing'
 ];
 
 const computedStyleCache = {};
 let hiddenTextarea: HTMLTextAreaElement;
 
-function calculateNodeStyling(node: Element, useCache: boolean = false): { sizingStyle: string, paddingSize: number, borderSize: number, boxSizing: string} {
+function calculateNodeStyling(node: Element, useCache: boolean = false): { sizingStyle: string, paddingSize: number, borderSize: number, boxSizing: string } {
   const nodeRef = (
     node.getAttribute('id') ||
     node.getAttribute('data-reactid') ||
@@ -60,15 +60,13 @@ function calculateNodeStyling(node: Element, useCache: boolean = false): { sizin
     parseFloat(style.getPropertyValue('border-top-width'))
   );
 
-  const sizingStyle = SIZING_STYLE
-  .map(name => `${name}:${style.getPropertyValue(name)}`)
-  .join(';');
+  const sizingStyle = SIZING_STYLE.map(name => `${name}:${style.getPropertyValue(name)}`).join(';');
 
   const nodeInfo = {
     sizingStyle,
     paddingSize,
     borderSize,
-    boxSizing,
+    boxSizing
   };
 
   if (useCache && nodeRef) {
@@ -83,7 +81,7 @@ export default function calculateNodeHeight(
   uiTextNode: HTMLTextAreaElement,
   useCache: boolean = false,
   minRows: number | null = null,
-  maxRows: number | null = null,
+  maxRows: number | null = null
 ): { height: number, minHeight: number, maxHeight: number, overflowY: string } {
   if (!hiddenTextarea) {
     hiddenTextarea = document.createElement('textarea');
@@ -102,7 +100,7 @@ export default function calculateNodeHeight(
   // the textbox
   const {
     paddingSize, borderSize,
-    boxSizing, sizingStyle,
+    boxSizing, sizingStyle
   } = calculateNodeStyling(uiTextNode, useCache);
 
   // Need to have the overflow attribute to hide the scrollbar otherwise
@@ -148,5 +146,5 @@ export default function calculateNodeHeight(
   if (!maxRows) {
     overflowY = 'hidden';
   }
-  return { height, minHeight, maxHeight, overflowY };
+  return {height, minHeight, maxHeight, overflowY};
 }

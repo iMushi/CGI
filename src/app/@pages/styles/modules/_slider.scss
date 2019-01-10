@@ -1,109 +1,115 @@
+@mixin vertical() {
+  &-vertical {
+    width: 12px;
+    height: 100%;
+    margin: 6px 10px;
+    padding: 0 4px;
 
-@mixin vertical(){
-    &-vertical {
-      width: 12px;
+    .pg-slider-rail {
       height: 100%;
-      margin: 6px 10px;
-      padding: 0 4px;
-  
-      .pg-slider-rail {
-        height: 100%;
-        width: 4px;
-      }
-  
-      .pg-slider-track {
-        width: 4px;
-      }
-  
-      .pg-slider-handle {
-        margin-left: -7px;
-        margin-bottom: -7px;
-        transition: all 0.2s ease;
-      }
-  
-      .pg-slider-mark {
-        top: 0;
-        left: 12px;
-        width: 18px;
-        height: 100%;
-      }
-  
-      .pg-slider-mark-text {
-        left: 4px;
-        white-space: nowrap;
-      }
-  
-      .pg-slider-step {
-        width: 4px;
-        height: 100%;
-      }
-  
-      .pg-slider-dot {
-        top: auto;
-        left: 2px;
-        margin-bottom: -4px;
-      }
+      width: 4px;
     }
-}
-@mixin colors{
-    &.primary{
-        .pg-slider-track, .pg-slider-dot-active{
-            background-color: $color-primary
-        }
-        .pg-slider-dot-active{
-          border-color: $color-primary
-        }
+
+    .pg-slider-track {
+      width: 4px;
     }
-    &.success{
-        .pg-slider-track, .pg-slider-dot-active{
-            background-color: $color-success
-        }
-        .pg-slider-dot-active{
-          border-color: $color-success
-        }
+
+    .pg-slider-handle {
+      margin-left: -7px;
+      margin-bottom: -7px;
+      transition: all 0.2s ease;
     }
-    &.danger{
-        .pg-slider-track, .pg-slider-dot-active{
-            background-color: $color-danger
-        }
-        .pg-slider-dot-active{
-          border-color: $color-danger
-        }
+
+    .pg-slider-mark {
+      top: 0;
+      left: 12px;
+      width: 18px;
+      height: 100%;
     }
-    &.info{
-        .pg-slider-track, .pg-slider-dot-active{
-            background-color: $color-info
-        }
-        .pg-slider-dot-active{
-          border-color: $color-info
-        }
+
+    .pg-slider-mark-text {
+      left: 4px;
+      white-space: nowrap;
     }
-    &.warning{
-        .pg-slider-track, .pg-slider-dot-active{
-            background-color: $color-warning
-        }
-        .pg-slider-dot-active{
-          border-color: $color-warning
-        }
+
+    .pg-slider-step {
+      width: 4px;
+      height: 100%;
     }
-    &.complete{
-        .pg-slider-track,.pg-slider-dot-active{
-            background-color: $color-complete
-        }
-        .pg-slider-dot-active{
-          border-color: $color-complete
-        }
+
+    .pg-slider-dot {
+      top: auto;
+      left: 2px;
+      margin-bottom: -4px;
     }
+  }
 }
 
-$slider-disabled-color:#ddd;
+@mixin colors {
+  &.primary {
+    .pg-slider-track, .pg-slider-dot-active {
+      background-color: $color-primary
+    }
+
+    .pg-slider-dot-active {
+      border-color: $color-primary
+    }
+  }
+  &.success {
+    .pg-slider-track, .pg-slider-dot-active {
+      background-color: $color-success
+    }
+
+    .pg-slider-dot-active {
+      border-color: $color-success
+    }
+  }
+  &.danger {
+    .pg-slider-track, .pg-slider-dot-active {
+      background-color: $color-danger
+    }
+
+    .pg-slider-dot-active {
+      border-color: $color-danger
+    }
+  }
+  &.info {
+    .pg-slider-track, .pg-slider-dot-active {
+      background-color: $color-info
+    }
+
+    .pg-slider-dot-active {
+      border-color: $color-info
+    }
+  }
+  &.warning {
+    .pg-slider-track, .pg-slider-dot-active {
+      background-color: $color-warning
+    }
+
+    .pg-slider-dot-active {
+      border-color: $color-warning
+    }
+  }
+  &.complete {
+    .pg-slider-track, .pg-slider-dot-active {
+      background-color: $color-complete
+    }
+
+    .pg-slider-dot-active {
+      border-color: $color-complete
+    }
+  }
+}
+
+$slider-disabled-color: #ddd;
 // tooltip
 $slider-tooltip-color: #fff;
 $slider-tooltip-bg: #000;
 $slider-tooltip-arrow-width: 4px;
-$slider-tooltip-distance:4px;
+$slider-tooltip-distance: 4px;
 $slider-tooltip-arrow-color: #000;
-$border-color-split:#ddd;
+$border-color-split: #ddd;
 .pg-slider {
   position: relative;
   margin: 4x 6px;
@@ -128,7 +134,7 @@ $border-color-split:#ddd;
     border-radius: 50%;
     border: solid 2px tint($color-master, 50%);
     background-color: #fff;
-    transition:left 0.2s ease,border-color 0.3s ease, transform .3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transition: left 0.2s ease, border-color 0.3s ease, transform .3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 
     &:hover {
       transform: scale(1.2);
@@ -141,7 +147,7 @@ $border-color-split:#ddd;
       box-shadow: 0 0 0 2px fadeout($color-master, 80%);
     }
   }
-  
+
   &-rail {
     position: absolute;
     width: 100%;
@@ -159,15 +165,18 @@ $border-color-split:#ddd;
     transition: all 0.2s ease;
     background: $color-master;
   }
+
   @include colors();
 
   &:hover {
     .pg-slider-rail {
       background-color: #e1e1e1;
     }
+
     .pg-slider-track {
       background-color: tint($color-master, 40%);
     }
+
     .pg-slider-handle {
       border-color: $color-master-light;
     }
@@ -212,12 +221,15 @@ $border-color-split:#ddd;
     border-radius: 50%;
     vertical-align: middle;
     background: #fff;
+
     &:first-child {
       margin-left: -4px;
     }
+
     &:last-child {
       margin-left: -4px;
     }
+
     &-active {
       border-color: tint($color-master, 50%);
     }
@@ -243,10 +255,12 @@ $border-color-split:#ddd;
       cursor: not-allowed !important;
     }
   }
-  .tooltip{
+
+  .tooltip {
     z-index: 600;
   }
-  .show{
+
+  .show {
     opacity: 0.7;
   }
 }

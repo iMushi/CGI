@@ -15,9 +15,10 @@ import { pgSliderComponent } from './slider.component';
 import { SliderService } from './slider.service';
 
 @NgModule({
-  exports: [ pgSliderComponent, pgSliderTrackComponent, pgSliderHandleComponent, pgSliderStepComponent, pgSliderMarksComponent ],
-  declarations: [ pgSliderComponent, pgSliderTrackComponent, pgSliderHandleComponent, pgSliderStepComponent, pgSliderMarksComponent ],
-  imports: [ CommonModule, TooltipModule ],
-  providers: [ SliderService ]
+  exports: [pgSliderComponent, pgSliderTrackComponent, pgSliderHandleComponent, pgSliderStepComponent, pgSliderMarksComponent],
+  declarations: [pgSliderComponent, pgSliderTrackComponent, pgSliderHandleComponent, pgSliderStepComponent, pgSliderMarksComponent],
+  imports: [CommonModule, TooltipModule],
+  providers: [SliderService]
 })
-export class pgSliderModule { }
+export class pgSliderModule {
+}

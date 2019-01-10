@@ -11,7 +11,7 @@ export class MessageBaseService<ContainerClass extends MessageContainerComponent
 
   constructor(overlay: Overlay, containerClass: Type<ContainerClass>, private _idPrefix: string = '') {
     this._container = overlay.create().attach(new ComponentPortal(containerClass)).instance;
-    
+
   }
 
   remove(messageId?: string): void {
@@ -24,11 +24,13 @@ export class MessageBaseService<ContainerClass extends MessageContainerComponent
 
   createMessage(message: object, options?: MessageDataOptions): MessageDataFilled {
     // TODO: spread on literal has been disallow on latest proposal
-    const resultMessage: MessageDataFilled = { ...message, ...{
-      messageId: this._generateMessageId(),
-      options,
-      createdAt: new Date()
-    }};
+    const resultMessage: MessageDataFilled = {
+      ...message, ...{
+        messageId: this._generateMessageId(),
+        options,
+        createdAt: new Date()
+      }
+    };
     this._container.createMessage(resultMessage);
 
     return resultMessage;
@@ -48,22 +50,22 @@ export class MessageService extends MessageBaseService<MessageContainerComponent
 
   // Shortcut methods
   success(content: string, options?: MessageDataOptions): MessageDataFilled {
-    return this.createMessage({ type: 'success', content }, options);
+    return this.createMessage({type: 'success', content}, options);
   }
 
   error(content: string, options?: MessageDataOptions): MessageDataFilled {
-    return this.createMessage({ type: 'error', content }, options);
+    return this.createMessage({type: 'error', content}, options);
   }
 
   info(content: string, options?: MessageDataOptions): MessageDataFilled {
-    return this.createMessage({ type: 'info', content }, options);
+    return this.createMessage({type: 'info', content}, options);
   }
 
   warning(content: string, options?: MessageDataOptions): MessageDataFilled {
-    return this.createMessage({ type: 'warning', content }, options);
+    return this.createMessage({type: 'warning', content}, options);
   }
 
   create(type: string, content: string, options?: MessageDataOptions): MessageDataFilled {
-    return this.createMessage({ type, content }, options);
+    return this.createMessage({type, content}, options);
   }
 }

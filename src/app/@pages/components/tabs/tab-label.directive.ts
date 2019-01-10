@@ -9,19 +9,19 @@ import { toBoolean } from '../util/convert';
 })
 export class pgTabLabelDirective {
 
-  private _disabled = false;
-
-  @Input()
-  @HostBinding('class.nav-item-disabled')
-  set disabled(value: boolean) {
-    this._disabled = toBoolean(value);
+  constructor(public elementRef: ElementRef) {
   }
+
+  private _disabled = false;
 
   get disabled(): boolean {
     return this._disabled;
   }
 
-  constructor(public elementRef: ElementRef) {
+  @Input()
+  @HostBinding('class.nav-item-disabled')
+  set disabled(value: boolean) {
+    this._disabled = toBoolean(value);
   }
 
   getOffsetLeft(): number {

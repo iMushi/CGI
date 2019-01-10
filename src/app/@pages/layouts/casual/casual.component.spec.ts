@@ -8,9 +8,8 @@ describe('CasualComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CasualComponent ]
-    })
-    .compileComponents();
+      declarations: [CasualComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

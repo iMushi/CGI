@@ -1,27 +1,15 @@
 import { AnimationEvent } from '@angular/animations';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  Input,
-  OnInit,
-  Output,
-  Renderer2,
-  ViewEncapsulation,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, Output, Renderer2, ViewEncapsulation } from '@angular/core';
 import { tagAnimation } from '../../animations/tag-animations';
 import { toBoolean } from '../util/convert';
 
 @Component({
-  selector       : 'pg-tag',
+  selector: 'pg-tag',
   encapsulation: ViewEncapsulation.None,
-  animations   : [
+  animations: [
     tagAnimation
   ],
-  template       : `
+  template: `
     <span *ngIf="!_closed"
       class="label"
       [ngClass]="_colorclass"
@@ -31,19 +19,27 @@ import { toBoolean } from '../util/convert';
       <i class="pg pg-close" (click)="_close($event)" *ngIf="Closable"></i>
     </span>
   `,
-  styleUrls      : [
-    './tag.scss',
+  styleUrls: [
+    './tag.scss'
   ]
 })
 export class pgTagComponent implements AfterViewInit {
-  private _closable = false;
   _prefixCls = 'label';
   _closed = false;
   _colorclass = "label-info";
-  /** Whether tag is closable */
-  @Input()
-  set Closable(value: boolean) {
-    this._closable = toBoolean(value);
+  /** The tag color */
+  @Input() color: string;
+  /** Event: emit before close */
+  @Output() BeforeClose = new EventEmitter<Event>();
+  // TODO: AnimationEvent is not subclass of Event, but all payloads should be unified
+  /** Event: emit after close */
+  @Output() Close = new EventEmitter<AnimationEvent>();
+  private _closable = false;
+
+  constructor(
+    private _elementRef: ElementRef,
+    private _render: Renderer2) {
+
   }
 
   @Input()
@@ -55,19 +51,19 @@ export class pgTagComponent implements AfterViewInit {
     return this._closable;
   }
 
-  /** The tag color */
-  @Input() color: string;
-
-  /** Event: emit before close */
-  @Output() BeforeClose = new EventEmitter<Event>();
-
-  // TODO: AnimationEvent is not subclass of Event, but all payloads should be unified
-  /** Event: emit after close */
-  @Output() Close = new EventEmitter<AnimationEvent>();
+  /** Whether tag is closable */
+  @Input()
+  set Closable(value: boolean) {
+    this._closable = toBoolean(value);
+  }
 
   @HostBinding('attr.data-show')
   get _dataShow(): boolean {
     return !this._closed;
+  }
+
+  get _textClass(): string {
+    return `${this._prefixCls}-text`;
   }
 
   _afterClose(event: AnimationEvent): void {
@@ -76,24 +72,12 @@ export class pgTagComponent implements AfterViewInit {
     }
   }
 
-
-  get _textClass(): string {
-    return `${this._prefixCls}-text`;
-  }
-
   _close(event: Event): void {
     this.BeforeClose.emit(event);
     if (event.defaultPrevented) {
-        return;
+      return;
     }
     this._closed = true;
-  }
-
-
-  constructor(
-    private _elementRef: ElementRef,
-    private _render: Renderer2) {
-
   }
 
   ngAfterViewInit(): void {

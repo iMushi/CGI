@@ -1,15 +1,4 @@
-import {
-  Component,
-  ContentChild,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { toBoolean } from '../util/convert';
 import { pgTabSetComponent } from './tabset.component';
 
@@ -20,37 +9,36 @@ import { pgTabSetComponent } from './tabset.component';
       <ng-content></ng-content>
     </ng-template>
   `,
-  styles  : [],
+  styles: [],
   host: {
     '[class.ant-tabs-tabpane]': 'true'
   }
 })
 export class pgTabComponent implements OnDestroy, OnInit {
-  private disabled = false;
-
   position: number | null = null;
   origin: number | null = null;
+  @Output() pgSelect = new EventEmitter();
+  @Output() pgClick = new EventEmitter();
+  @Output() pgDeselect = new EventEmitter();
+  @ContentChild('TabHeading') _tabHeading: TemplateRef<void>;
+  private disabled = false;
 
-  @Input()
-  set Disabled(value: boolean) {
-    this.disabled = toBoolean(value);
+  constructor(private pgTabSetComponent: pgTabSetComponent) {
   }
 
   get Disabled(): boolean {
     return this.disabled;
   }
 
-  @Output() pgSelect = new EventEmitter();
-  @Output() pgClick = new EventEmitter();
-  @Output() pgDeselect = new EventEmitter();
-  @ContentChild('TabHeading') _tabHeading: TemplateRef<void>;
+  @Input()
+  set Disabled(value: boolean) {
+    this.disabled = toBoolean(value);
+  }
+
   @ViewChild(TemplateRef) _content: TemplateRef<void>;
 
   get content(): TemplateRef<void> | null {
     return this._content;
-  }
-
-  constructor(private pgTabSetComponent: pgTabSetComponent) {
   }
 
   ngOnInit(): void {

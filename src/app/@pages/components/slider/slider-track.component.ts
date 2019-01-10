@@ -2,42 +2,39 @@ import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@
 import { toBoolean } from '../util/convert';
 
 @Component({
-  selector     : 'pg-slider-track',
+  selector: 'pg-slider-track',
   encapsulation: ViewEncapsulation.None,
-  template     : `
+  template: `
     <div [class]="ClassName" [ngStyle]="style"></div>
   `
 })
 export class pgSliderTrackComponent implements OnChanges {
-  private _vertical = false;
-  private _included = false;
-
   // Dynamic properties
   @Input() Offset;
   @Input() Length;
-
   // Static properties
   @Input() ClassName;
-
-  @Input()
-  set Vertical(value: boolean) { // Required
-    this._vertical = toBoolean(value);
-  }
+  style: { bottom?: string, height?: string, left?: string, width?: string, visibility?: string } = {};
+  private _vertical = false;
+  private _included = false;
 
   get Vertical(): boolean {
     return this._vertical;
   }
 
   @Input()
-  set Included(value: boolean) {
-    this._included = toBoolean(value);
+  set Vertical(value: boolean) { // Required
+    this._vertical = toBoolean(value);
   }
 
   get Included(): boolean {
     return this._included;
   }
 
-  style: { bottom?: string, height?: string, left?: string, width?: string, visibility?: string } = {};
+  @Input()
+  set Included(value: boolean) {
+    this._included = toBoolean(value);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.Included) {
