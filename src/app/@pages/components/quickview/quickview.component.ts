@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { pagesToggleService } from '../../services/toggler.service';
 import { QuickviewService } from './quickview.service';

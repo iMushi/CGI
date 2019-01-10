@@ -22,7 +22,7 @@ import { pgTimePickerModule } from '../@pages/components/time-picker/timepicker.
 import { pgTabsModule } from '../@pages/components/tabs/tabs.module';
 import { pgSelectfx } from '../@pages/components/cs-select/select.module';
 import { pgDatePickerModule } from '../@pages/components/datepicker/datepicker.module';
-import { pgUploadModule } from '../@pages/components/upload/upload.module';
+// import { pgUploadModule } from '../@pages/components/upload/upload.module';
 
 //Thirdparty components
 import { TextMaskModule } from 'angular2-text-mask';
@@ -48,13 +48,12 @@ import { FormLayoutsComponent } from './form-layouts/form-layouts.component';
     pgTimePickerModule,
     pgTabsModule,
     pgSelectfx,
-    pgUploadModule,
     TypeaheadModule.forRoot(),
     pgDatePickerModule,
     QuillModule
   ],
-  declarations: [FormWizardComponent, 
-    FormElementsComponent, 
+  declarations: [FormWizardComponent,
+    FormElementsComponent,
     FormLayoutsComponent],
   providers: []
 })

@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { pagesToggleService } from '../../services/toggler.service';
 import { Event, NavigationEnd, Router } from '@angular/router';
 

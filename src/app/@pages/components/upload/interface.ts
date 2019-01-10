@@ -1,6 +1,5 @@
 // tslint:disable:prefer-method-signature
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable ,  Subscription } from 'rxjs';
 
 export type UploadFileStatus = 'error' | 'success' | 'complete' | 'uploading' | 'removed';
 

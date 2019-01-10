@@ -1,5 +1,5 @@
 import { Component, ContentChild, ElementRef, HostBinding, HostListener, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { pagesToggleService } from '../../services/toggler.service';
 
 declare var pg: any;

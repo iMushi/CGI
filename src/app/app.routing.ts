@@ -1,13 +1,12 @@
 import { Routes } from '@angular/router';
 //Layouts
-import { BlankSimplywhiteComponent, Consulta, SimplyWhiteLayout } from './@pages/layouts';
+import { BlankSimplywhiteComponent, ConsultaComponent, SimplyWhiteLayout } from './@pages/layouts';
 //Sample Pages
 import { SimplyWhiteDashboardComponent } from './dashboard/simplywhite/dashboard.component';
 import { CardsComponentPage } from './cards/cards.component';
 import { ViewsPageComponent } from './views/views.component';
 import { ChartsComponent } from './charts/charts.component';
 import { SocialComponent } from './social/social.component';
-import { ConsultaComponent } from './@pages/layouts/consulta/consulta.component';
 import { FlashVentasComponent } from './flash-ventas/flash-ventas.component';
 
 export const AppRoutes: Routes = [

@@ -14,10 +14,8 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { of } from 'rxjs/observable/of';
-import { filter } from 'rxjs/operators/filter';
+import { Observable ,  Subscription ,  of } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { toBoolean } from '../util/convert';
 import { pgUploadBtnComponent } from './upload-btn.component';
 import { ShowUploadListInterface, UploadChangeParam, UploadFile, UploadFilter, UploadListType, UploadType, ZipButtonOptions } from './interface';

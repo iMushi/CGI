@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { pagesToggleService } from '../../@pages/services/toggler.service'
-import { Subscriber } from 'rxjs/Subscriber'
+import { Subscriber } from 'rxjs'
 
 @Component({
   selector: 'google-map-page',

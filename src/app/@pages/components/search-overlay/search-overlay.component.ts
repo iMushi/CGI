@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { fadeAnimation } from '../../animations/fade-animations';
 import { pagesToggleService } from '../../services/toggler.service';
 import { SearchResult } from './search-result';

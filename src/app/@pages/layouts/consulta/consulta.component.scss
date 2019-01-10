@@ -124,3 +124,18 @@ $assets-url: "../../assets" !global;
     display: inline;
   }
 }
+
+
+@media (max-width: 979px) {
+  .header {
+    background: url('../../assets/images/top.png') repeat-y top left;
+    background-size: contain;
+  }
+}
+
+@media (min-width: 980px) {
+  .header {
+    background: url('../../assets/images/top.png') repeat-y top left;
+    background-size: contain;
+  }
+}

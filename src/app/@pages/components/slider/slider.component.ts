@@ -6,16 +6,8 @@
 */
 import { Component, ElementRef, EventEmitter, forwardRef, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { merge } from 'rxjs/observable/merge';
-import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
-import { filter } from 'rxjs/operators/filter';
-import { map } from 'rxjs/operators/map';
-import { pluck } from 'rxjs/operators/pluck';
-import { takeUntil } from 'rxjs/operators/takeUntil';
-import { tap } from 'rxjs/operators/tap';
+import { Observable ,  Subscription ,  fromEvent ,  merge } from 'rxjs';
+import { distinctUntilChanged ,  filter ,  map ,  pluck ,  takeUntil ,  tap } from 'rxjs/operators';
 import { toBoolean } from '../util/convert';
 import { Marks } from './slider-marks.component';
 import { SliderService } from './slider.service';

@@ -16,12 +16,8 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { merge } from 'rxjs/observable/merge';
-import { of as observableOf } from 'rxjs/observable/of';
-import { auditTime } from 'rxjs/operators/auditTime';
-import { startWith } from 'rxjs/operators/startWith';
+import { Subscription ,  fromEvent ,  merge ,  of as observableOf } from 'rxjs';
+import { auditTime ,  startWith } from 'rxjs/operators';
 import { toBoolean } from '../util/convert';
 import { pgTabLabelDirective } from './tab-label.directive';
 import { pgTabsInkBarDirective } from './tabs-ink-bar.directive';
