@@ -1,5 +1,5 @@
 <!-- START SECONDARY SIDEBAR MENU-->
-<div class="secondary-sidebar {{_extraClass}}" [ngStyle]="_togglePosition" [class.secondary-show]="_toggleMobileSidebar" [class.secondary-hide]="!_toggleMobileSidebar" >
-    <ng-content></ng-content>
-  </div>
-    <!-- END SECONDARY SIDEBAR MENU -->
+<div [class.secondary-hide]="!_toggleMobileSidebar" [class.secondary-show]="_toggleMobileSidebar" [ngStyle]="_togglePosition" class="secondary-sidebar {{_extraClass}}">
+  <ng-content></ng-content>
+</div>
+<!-- END SECONDARY SIDEBAR MENU -->

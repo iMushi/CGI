@@ -5,9 +5,9 @@ import { pgSelectModule } from '../select/select.module';
 import { PaginationComponent } from './pagination.component';
 
 @NgModule({
-  declarations: [ PaginationComponent ],
-  exports     : [ PaginationComponent ],
-  imports     : [ CommonModule, FormsModule, pgSelectModule ]
+  declarations: [PaginationComponent],
+  exports: [PaginationComponent],
+  imports: [CommonModule, FormsModule, pgSelectModule]
 })
 
 export class pgPaginationModule {

@@ -1,53 +1,37 @@
 import { ConnectedOverlayPositionChange, ConnectionPositionPair } from '@angular/cdk/overlay';
-import {
-  forwardRef,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-  Renderer2,
-  NgZone
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, forwardRef, Input, NgZone, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 
 import { DayInterface, MonthInterface } from './date';
-import { dropDownAnimation,scaleInAnimation } from '../../animations/dropdown-animations';
+import { dropDownAnimation, scaleInAnimation } from '../../animations/dropdown-animations';
 import { DEFAULT_DATEPICKER_POSITIONS } from '../../utils/overlay-position-map';
 
 import { pgTimePickerInnerComponent } from '../time-picker/timepicker-inner.component';
-import { pgDateScroller } from './datepicker-scroller.component';
 import { toBoolean } from '../util/convert';
-import { reqAnimFrame } from '../util/request-animation';
 
 
 @Component({
-  selector     : 'pg-datepicker',
+  selector: 'pg-datepicker',
   encapsulation: ViewEncapsulation.None,
-  animations   : [
+  animations: [
     dropDownAnimation,
     scaleInAnimation
   ],
-  templateUrl     : "datepicker.component.html",
-  providers    : [
+  templateUrl: "datepicker.component.html",
+  providers: [
     {
-      provide    : NG_VALUE_ACCESSOR,
+      provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => pgDatePickerComponent),
-      multi      : true
+      multi: true
     }
   ],
-  styleUrls    : ['./datepicker.scss'],
-  host         : {
+  styleUrls: ['./datepicker.scss'],
+  host: {
     '[class.ant-calendar-picker]': 'true'
   }
 })
 export class pgDatePickerComponent implements ControlValueAccessor, OnInit {
-  private _allowClear = true;
-  private _disabled = false;
-  private _showTime: Partial<pgTimePickerInnerComponent> = null;
   _el: HTMLElement;
   _open = false;
   _mode = 'year';
@@ -64,17 +48,26 @@ export class pgDatePickerComponent implements ControlValueAccessor, OnInit {
   _startDecade = Math.floor(this._showYear / 10) * 10;
   _yearPanel: string[][] = [];
   _monthList = [];
-  _positions: ConnectionPositionPair[] = [ ...DEFAULT_DATEPICKER_POSITIONS ];
-  // ngModel Access
-  onChange: (value: Date) => void = () => null;
-  onTouched: () => void = () => null;
-
+  _positions: ConnectionPositionPair[] = [...DEFAULT_DATEPICKER_POSITIONS];
   @Input() Format = 'YYYY-MM-DD';
   @Input() Size = '';
   @Input() Mode: 'day' | 'month' = 'day';
   @ViewChild('trigger') trigger;
   @ViewChild(pgTimePickerInnerComponent) timePickerInner: pgTimePickerInnerComponent;
   @ViewChild('monthSlider') _monthSlider: ElementRef;
+  @Input() HideFooter = true;
+  private _allowClear = true;
+  private _disabled = false;
+  private _showTime: Partial<pgTimePickerInnerComponent> = null;
+
+  constructor(private _elementRef: ElementRef, private _cdr: ChangeDetectorRef, private _renderer: Renderer2, private _ngZone: NgZone) {
+    this._el = this._elementRef.nativeElement;
+  }
+
+  get ShowTime(): Partial<pgTimePickerInnerComponent> {
+    return this._showTime;
+  }
+
   @Input()
   set ShowTime(value: Partial<pgTimePickerInnerComponent>) {
     if (typeof value === 'string' || typeof value === 'boolean') {
@@ -85,24 +78,22 @@ export class pgDatePickerComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  get ShowTime(): Partial<pgTimePickerInnerComponent> {
-    return this._showTime;
-  }
-
   @Input()
   set Placeholder(value) {
     this._placeHolder = value
   }
 
-  @Input() HideFooter = true;
+  get AllowClear(): boolean {
+    return this._allowClear;
+  }
 
   @Input()
   set AllowClear(value: boolean) {
     this._allowClear = toBoolean(value);
   }
 
-  get AllowClear(): boolean {
-    return this._allowClear;
+  get Disabled(): boolean {
+    return this._disabled;
   }
 
   @Input()
@@ -111,20 +102,16 @@ export class pgDatePickerComponent implements ControlValueAccessor, OnInit {
     this._closeCalendar();
   }
 
-  get Disabled(): boolean {
-    return this._disabled;
-  }
-
-  @Input()
-  set DisabledDate(value: () => boolean) {
-    this._disabledDate = value;
-  }
-
   get DisabledDate(): () => boolean {
     if (this._mode === 'month' && this.Mode === 'day') {
       return;
     }
     return this._disabledDate;
+  }
+
+  @Input()
+  set DisabledDate(value: () => boolean) {
+    this._disabledDate = value;
   }
 
   get _disabledToday(): boolean {
@@ -135,20 +122,29 @@ export class pgDatePickerComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  onPositionChange(position: ConnectedOverlayPositionChange): void {
-    const _position = position.connectionPair.originY === 'bottom' ? 'top' : 'bottom';
-    if (this._dropDownPosition !== _position) {
-      this._dropDownPosition = _position;
-      this._cdr.detectChanges();
-    }
-  }
-
   get Value(): Date {
     return this._value || new Date();
   }
 
   set Value(value: Date) {
     this._updateValue(value);
+  }
+
+  get _showClearIcon(): boolean {
+    return this._value && !this.Disabled && this.AllowClear;
+  }
+
+  // ngModel Access
+  onChange: (value: Date) => void = () => null;
+
+  onTouched: () => void = () => null;
+
+  onPositionChange(position: ConnectedOverlayPositionChange): void {
+    const _position = position.connectionPair.originY === 'bottom' ? 'top' : 'bottom';
+    if (this._dropDownPosition !== _position) {
+      this._dropDownPosition = _position;
+      this._cdr.detectChanges();
+    }
   }
 
   _changeTime($event: Date): void {
@@ -281,10 +277,6 @@ export class pgDatePickerComponent implements ControlValueAccessor, OnInit {
     this._mode = 'year';
   }
 
-  get _showClearIcon(): boolean {
-    return this._value && !this.Disabled && this.AllowClear;
-  }
-
   _generateYearPanel(): void {
     let _t = [];
     for (let i = 0; i < 10; i++) {
@@ -296,18 +288,13 @@ export class pgDatePickerComponent implements ControlValueAccessor, OnInit {
         _t.push(i);
       }
     }
-    this._yearPanel[ 0 ].unshift('start');
-    this._yearPanel[ 3 ].push('end');
-  }
-
-
-  constructor(private _elementRef: ElementRef, private _cdr: ChangeDetectorRef,private _renderer: Renderer2,private _ngZone: NgZone) {
-    this._el = this._elementRef.nativeElement;
+    this._yearPanel[0].unshift('start');
+    this._yearPanel[3].push('end');
   }
 
   ngOnInit(): void {
     this._generateYearPanel();
-    
+
   }
 
   writeValue(value: Date): void {

@@ -12,9 +12,9 @@ import { pgSelectModule } from '../select/select.module';
 import { pgCalendarViewComponent } from './calendar.component';
 
 @NgModule({
-  imports     : [ CommonModule, pgSelectModule, FormsModule ],
-  declarations: [ pgCalendarViewComponent ],
-  exports     : [ pgCalendarViewComponent ]
+  imports: [CommonModule, pgSelectModule, FormsModule],
+  declarations: [pgCalendarViewComponent],
+  exports: [pgCalendarViewComponent]
 })
 export class pgCalendarViewModule {
 }

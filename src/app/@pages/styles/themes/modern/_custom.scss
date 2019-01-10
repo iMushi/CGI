@@ -2,28 +2,31 @@
 // --------------------------------------------------
 // Copyright Reserved Revox - 2014
 // --------------------------------------------------
-
 @import "var";
 
 //Layout Overrides
-app-root, casual-layout{
+app-root, casual-layout {
   height: 100%;
 }
-casual-layout{
+
+casual-layout {
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
 }
-.horizontal-app-menu .header .pg{
+
+.horizontal-app-menu .header .pg {
   display: inline-block;
 }
+
 //Hide default breadcrumb for demo purpose
-.inner .breadcrumb{
+.inner .breadcrumb {
   display: none;
 }
-pg-breadcrumb{
+
+pg-breadcrumb {
   display: none
 }
 
@@ -39,7 +42,7 @@ pg-breadcrumb{
   margin-right: 14px;
   font-size: 16px;
   font-weight: bold;
-  font-family: segoe ui,helvetica neue,Helvetica,Arial,sans-serif;
+  font-family: segoe ui, helvetica neue, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -50,18 +53,22 @@ pg-breadcrumb{
 .horizontal-app-menu {
   .header {
     background: #fff;
+
     .header-inner {
       padding-left: 20px;
       padding-right: 20px;
+
       .brand.inline {
         padding-right: 45px;
         margin-right: 20px;
       }
     }
+
     .header-icon, .search-link {
       color: #fff;
     }
   }
+
   .menu-bar {
     > ul > li {
       &.open > a {
@@ -69,86 +76,102 @@ pg-breadcrumb{
         transition: none;
         transform: none;
       }
+
       &:first-child > a {
         padding-left: 4px;
       }
     }
+
     ul li a .arrow {
       padding-left: 7px;
     }
   }
 }
+
 .header {
-  .bubble{
+  .bubble {
     background-color: $color-danger;
   }
 }
-.menu-bar{
-  border-bottom: 1px solid rgba(0,0,0,.13);
-  ul{
+
+.menu-bar {
+  border-bottom: 1px solid rgba(0, 0, 0, .13);
+
+  ul {
     li {
-      &.active{
+      &.active {
         border-bottom: 2px solid $color-primary;
-        a{
+
+        a {
           opacity: .87;
         }
       }
-      a{
+
+      a {
         opacity: .6;
         color: #000;
       }
     }
   }
 }
-@media (min-width: 992px){
+
+@media (min-width: 992px) {
   .horizontal-app-menu {
-    .menu-bar{
+    .menu-bar {
       & > ul {
-        & > li{
+        & > li {
           margin: 0 12px;
-          &:first-child{
+
+          &:first-child {
             margin-left: 0;
           }
-          & > a{
+
+          & > a {
             padding: 0 4px;
           }
-          & > ul{
+
+          & > ul {
             left: -21px;
           }
         }
       }
     }
+
     .ghost-nav-dropdown {
       left: -21px;
     }
   }
 }
 
-.jumbotron{
+.jumbotron {
   padding-top: 20px;
 }
 
-.horizontal-app-menu .menu-bar > ul > li:hover:not(.open) > a{
-  color:inherit;
+.horizontal-app-menu .menu-bar > ul > li:hover:not(.open) > a {
+  color: inherit;
 }
 
-@media (max-width:979px){
-.horizontal-app-menu {
-  .header {
-    padding-left: 0;
-    .header-inner{
-      padding-left: 15px;
-      padding-right: 15px;
-      .brand.inline{
-        padding: 0;
+@media (max-width: 979px) {
+  .horizontal-app-menu {
+    .header {
+      padding-left: 0;
+
+      .header-inner {
+        padding-left: 15px;
+        padding-right: 15px;
+
+        .brand.inline {
+          padding: 0;
           margin: 0;
           margin-left: 35px;
+        }
       }
     }
+
+    .menu-bar ul li a {
+      padding-right: 20px !important;
+    }
   }
-  .menu-bar ul li a{
-    padding-right: 20px !important;
-  }
- }
 }
+
 // END Theme Overwrite

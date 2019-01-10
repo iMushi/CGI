@@ -11,7 +11,14 @@ import { RouterModule } from '@angular/router';
 import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
 // Layouts
-import { BlankComponent, CasualLayout, CondensedComponent, CorporateLayout, ExecutiveLayout, RootLayout, SimplyWhiteLayout } from './@pages/layouts';
+import { BlankComponent
+  , CasualLayout
+  , CondensedComponent
+  , ConsultaComponent
+  , CorporateLayout
+  , ExecutiveLayout
+  , RootLayout
+  , SimplyWhiteLayout } from './@pages/layouts';
 // Layout Service - Required
 import { pagesToggleService } from './@pages/services/toggler.service';
 // Shared Layout Components
@@ -72,7 +79,8 @@ import { ExecutiveDashboardComponent } from './dashboard/executive/dashboard.com
 import { BlankCorporateComponent } from './@pages/layouts/blank-corporate/blank-corporate.component';
 import { BlankSimplywhiteComponent } from './@pages/layouts/blank-simplywhite/blank-simplywhite.component';
 import { BlankCasualComponent } from './@pages/layouts/blank-casual/blank-casual.component';
-import { ConsultaComponent } from './@pages/layouts/consulta/consulta.component';
+import { FlashVentasComponent } from './flash-ventas/flash-ventas.component';
+import { NgxSoapModule } from 'ngx-soap';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -112,7 +120,8 @@ export class AppHammerConfig extends HammerGestureConfig {
     BlankCorporateComponent,
     BlankSimplywhiteComponent,
     BlankCasualComponent,
-    ConsultaComponent
+    ConsultaComponent,
+    FlashVentasComponent
   ],
   imports: [
     BrowserModule,
@@ -145,7 +154,8 @@ export class AppHammerConfig extends HammerGestureConfig {
     QuillModule,
     PerfectScrollbarModule,
     pgSwitchModule,
-    DashboardModule
+    DashboardModule,
+    NgxSoapModule
   ],
   providers: [QuickviewService, pagesToggleService, ChartService, SocialService, {
     provide: PERFECT_SCROLLBAR_CONFIG,

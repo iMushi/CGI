@@ -13,9 +13,9 @@ import { pgDateScroller } from './datepicker-scroller.component';
 
 
 @NgModule({
-  imports     : [ CommonModule, pgTimePickerModule,pgCalendarViewModule, FormsModule, OverlayModule,pgUtilModule,ObserversModule ],
-  declarations: [ pgDatePickerComponent, pgRangePickerComponent,pgDateScroller ],
-  exports     : [ pgDatePickerComponent, pgRangePickerComponent ]
+  imports: [CommonModule, pgTimePickerModule, pgCalendarViewModule, FormsModule, OverlayModule, pgUtilModule, ObserversModule],
+  declarations: [pgDatePickerComponent, pgRangePickerComponent, pgDateScroller],
+  exports: [pgDatePickerComponent, pgRangePickerComponent]
 })
 export class pgDatePickerModule {
 }

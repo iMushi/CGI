@@ -1,12 +1,4 @@
-import {
-  forwardRef,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, forwardRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 import { dropDownAnimation } from '../../animations/dropdown-animations';
@@ -20,9 +12,9 @@ export interface TimeUnitInterface {
 }
 
 @Component({
-  selector     : 'pg-timepicker-inner',
+  selector: 'pg-timepicker-inner',
   encapsulation: ViewEncapsulation.None,
-  template     : `
+  template: `
     <span
       class="time-picker"
       [ngClass]="{'ant-time-picker-large':Size=='large','ant-time-picker-small':Size=='small'}">
@@ -101,21 +93,19 @@ export interface TimeUnitInterface {
       </div>
       </div>
     </span>`,
-  animations   : [
+  animations: [
     dropDownAnimation
   ],
-  providers    : [
+  providers: [
     {
-      provide    : NG_VALUE_ACCESSOR,
+      provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => pgTimePickerInnerComponent),
-      multi      : true
+      multi: true
     }
   ],
-  styleUrls    : ['./timepicker.scss']
+  styleUrls: ['./timepicker.scss']
 })
 export class pgTimePickerInnerComponent implements OnInit, ControlValueAccessor {
-  private _disabled = false;
-  private _hideDisabledOptions = false;
   _now = new Date();
   _el: HTMLElement;
   _open = false;
@@ -130,28 +120,26 @@ export class pgTimePickerInnerComponent implements OnInit, ControlValueAccessor 
   _showHour = this._format.indexOf('HH') > -1;
   _showMinute = this._format.indexOf('mm') > -1;
   _showSecond = this._format.indexOf('ss') > -1;
-  _width = `${( +this._showHour + +this._showMinute + +this._showSecond) * 56 + 1 }px`;
-  _DisabledHours: () => number[];
-  // ngModel Access
-  onChange: (value: Date) => void = () => null;
-  onTouched: () => void = () => null;
-
+  _width = `${(+this._showHour + +this._showMinute + +this._showSecond) * 56 + 1}px`;
   @ViewChild('hourListInstance') _hourListInstance;
   @ViewChild('minuteListInstance') _minuteListInstance;
   @ViewChild('inputTimeInstance') _inputTimeInstance;
   @ViewChild('secondListInstance') _secondListInstance;
-
-  @Input()
-  set HideDisabledOptions(value: boolean) {
-    this._hideDisabledOptions = toBoolean(value);
-  }
-
-  get HideDisabledOptions(): boolean {
-    return this._hideDisabledOptions;
-  }
-
   @Input() PlaceHolder = "Select Time";
   @Input() Size: 'small' | 'large' | 'default' = 'default';
+  @Input() DisabledMinutes: (hour: number) => number[];
+  @Input() DisabledSeconds: (hour: number, minute: number) => number[];
+  private _disabled = false;
+  private _hideDisabledOptions = false;
+
+  constructor(public _cdr: ChangeDetectorRef) {
+  }
+
+  _DisabledHours: () => number[];
+
+  get DisabledHours(): () => number[] {
+    return this._DisabledHours;
+  }
 
   @Input()
   set DisabledHours(fun: () => number[]) {
@@ -159,20 +147,26 @@ export class pgTimePickerInnerComponent implements OnInit, ControlValueAccessor 
     this._buildHours();
   }
 
-  get DisabledHours(): () => number[] {
-    return this._DisabledHours;
+  get HideDisabledOptions(): boolean {
+    return this._hideDisabledOptions;
   }
 
-  @Input() DisabledMinutes: (hour: number) => number[];
-  @Input() DisabledSeconds: (hour: number, minute: number) => number[];
+  @Input()
+  set HideDisabledOptions(value: boolean) {
+    this._hideDisabledOptions = toBoolean(value);
+  }
+
+  get Disabled(): boolean {
+    return this._disabled;
+  }
 
   @Input()
   set Disabled(value: boolean) {
     this._disabled = toBoolean(value);
   }
 
-  get Disabled(): boolean {
-    return this._disabled;
+  get Format(): string {
+    return this._format;
   }
 
   @Input()
@@ -181,11 +175,7 @@ export class pgTimePickerInnerComponent implements OnInit, ControlValueAccessor 
     this._showHour = this._format.indexOf('HH') > -1;
     this._showMinute = this._format.indexOf('mm') > -1;
     this._showSecond = this._format.indexOf('ss') > -1;
-    this._width = `${( +this._showHour + +this._showMinute + +this._showSecond) * 56 + 1 }px`;
-  }
-
-  get Format(): string {
-    return this._format;
+    this._width = `${(+this._showHour + +this._showMinute + +this._showSecond) * 56 + 1}px`;
   }
 
   get Value(): Date {
@@ -202,9 +192,14 @@ export class pgTimePickerInnerComponent implements OnInit, ControlValueAccessor 
     this._selectedSecond = moment(this.Value).seconds();
   }
 
+  // ngModel Access
+  onChange: (value: Date) => void = () => null;
+
+  onTouched: () => void = () => null;
+
   _scrollToSelected(instance: HTMLElement, index: number, duration: number = 0, unit: string): void {
     const _transIndex = this._translateIndex(index, unit);
-    const currentOption = (instance.children[ 0 ].children[ _transIndex ] || instance.children[ 0 ].children[ 0 ]) as HTMLElement;
+    const currentOption = (instance.children[0].children[_transIndex] || instance.children[0].children[0]) as HTMLElement;
     this.scrollTo(instance, currentOption.offsetTop, duration);
   }
 
@@ -311,8 +306,8 @@ export class pgTimePickerInnerComponent implements OnInit, ControlValueAccessor 
     for (let i = 0; i <= 23; i++) {
       this._hourList.push({
         disabled: this.DisabledHours && (this.DisabledHours().indexOf(i) !== -1),
-        name    : i.toString().length === 1 ? ('0' + i) : ('' + i),
-        index   : i
+        name: i.toString().length === 1 ? ('0' + i) : ('' + i),
+        index: i
       });
     }
   }
@@ -322,8 +317,8 @@ export class pgTimePickerInnerComponent implements OnInit, ControlValueAccessor 
     for (let i = 0; i <= 59; i++) {
       this._minuteList.push({
         disabled: this.DisabledMinutes && (this.DisabledMinutes(this._selectedHour).indexOf(i) !== -1),
-        name    : i.toString().length === 1 ? ('0' + i) : ('' + i),
-        index   : i
+        name: i.toString().length === 1 ? ('0' + i) : ('' + i),
+        index: i
       });
     }
   }
@@ -333,8 +328,8 @@ export class pgTimePickerInnerComponent implements OnInit, ControlValueAccessor 
     for (let i = 0; i <= 59; i++) {
       this._secondList.push({
         disabled: this.DisabledSeconds && (this.DisabledSeconds(this._selectedHour, this._selectedMinute).indexOf(i) !== -1),
-        name    : i.toString().length === 1 ? ('0' + i) : ('' + i),
-        index   : i
+        name: i.toString().length === 1 ? ('0' + i) : ('' + i),
+        index: i
       });
     }
   }
@@ -353,9 +348,6 @@ export class pgTimePickerInnerComponent implements OnInit, ControlValueAccessor 
 
   setDisabledState(isDisabled: boolean): void {
     this.Disabled = isDisabled;
-  }
-
-  constructor(public _cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {

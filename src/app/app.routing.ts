@@ -8,13 +8,18 @@ import { ViewsPageComponent } from './views/views.component';
 import { ChartsComponent } from './charts/charts.component';
 import { SocialComponent } from './social/social.component';
 import { ConsultaComponent } from './@pages/layouts/consulta/consulta.component';
+import { FlashVentasComponent } from './flash-ventas/flash-ventas.component';
 
 export const AppRoutes: Routes = [
 
   //Simply White Routes
   {
     path: 'consulta',
-    component: ConsultaComponent
+    component: ConsultaComponent,
+    children: [{
+      path: 'flash-ventas',
+      component: FlashVentasComponent
+    }]
   },
 
   {

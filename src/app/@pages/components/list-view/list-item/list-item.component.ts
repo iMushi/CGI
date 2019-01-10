@@ -1,5 +1,6 @@
-import { Component, OnInit ,ContentChild,TemplateRef, ViewChild} from '@angular/core';
+import { Component, ContentChild, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ListViewContainerComponent } from '../list-view-container/list-view-container.component'
+
 @Component({
   selector: 'pg-list-item',
   templateUrl: './list-item.component.html',
@@ -8,14 +9,14 @@ import { ListViewContainerComponent } from '../list-view-container/list-view-con
 export class ListItemComponent implements OnInit {
 
   @ContentChild('ItemHeading') _itemHeading: TemplateRef<void>;
+
+  constructor(private pgItemView: ListViewContainerComponent) {
+  }
+
   @ViewChild(TemplateRef) _content: TemplateRef<void>;
 
   get content(): TemplateRef<void> | null {
     return this._content;
-  }
-
-
-  constructor(private pgItemView: ListViewContainerComponent) {
   }
 
   ngOnInit(): void {

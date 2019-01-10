@@ -8,9 +8,8 @@ describe('QuickviewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QuickviewComponent ]
-    })
-    .compileComponents();
+      declarations: [QuickviewComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

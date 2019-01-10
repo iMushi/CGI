@@ -1,23 +1,11 @@
 import { CdkConnectedOverlay, ConnectedOverlayPositionChange, ConnectionPositionPair } from '@angular/cdk/overlay';
-import {
-  forwardRef,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, forwardRef, Input, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 import { DayInterface, MonthInterface, RangePart } from './date';
 import { dropDownAnimation } from '../../animations/dropdown-animations';
 import { DEFAULT_DATEPICKER_POSITIONS } from '../../utils/overlay-position-map';
 import { pgTimePickerInnerComponent } from '../time-picker/timepicker-inner.component';
-import { pgDateScroller } from './datepicker-scroller.component';
 import { toBoolean } from '../util/convert';
 import { measureScrollbar } from '../util/mesureScrollBar';
 
@@ -28,7 +16,7 @@ import { measureScrollbar } from '../util/mesureScrollBar';
   animations: [
     dropDownAnimation
   ],
-  templateUrl:'rangepicker.component.html',
+  templateUrl: 'rangepicker.component.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -36,15 +24,87 @@ import { measureScrollbar } from '../util/mesureScrollBar';
       multi: true
     }
   ],
-  styleUrls    : ['./datepicker.scss'],
+  styleUrls: ['./datepicker.scss']
 })
 export class pgRangePickerComponent implements ControlValueAccessor, OnInit {
+  _part = RangePart; // provided to template
+  hoveringSelectValue: Date;
+  _open;
+  _disabledDate: (value: Date) => boolean;
+  _disabledDatePart: Array<(value: Date) => boolean> = [null, null];
+  _mode = ['month', 'month'];
+  _selectedMonth: number[] = [];
+  _selectedYear: number[] = [];
+  _selectedDate: number[] = [];
+  _yearPanel: string[][] = [];
+  _startDecade = new Array(2).fill(Math.floor(this._showYear[RangePart.Start] / 10) * 10);
+  _triggerWidth = 0;
+  _dropDownPosition = 'bottom';
+  _positions: ConnectionPositionPair[] = [...DEFAULT_DATEPICKER_POSITIONS];
+  _offsetX: number = 0;
+  @ViewChild(CdkConnectedOverlay) _cdkOverlay: CdkConnectedOverlay;
+  @ViewChild('trigger') trigger;
+  @Input() Size = '';
+  @Input() Format = 'YYYY-MM-DD';
+  @Input() AllowClear = true;
+  @ViewChildren(pgTimePickerInnerComponent) timePickerInner: QueryList<pgTimePickerInnerComponent>;
   private _disabled = false;
   private _showTime: Partial<pgTimePickerInnerComponent> = null;
   private _now = moment();
+  _showMonth = [this._now.month(), this._now.clone().add(1, 'month').month()];
+  _showYear = [this._now.year(), this._now.year()];
   private _el;
-  private _oldValue: Date[]  = this._defaultRangeValue;
+  private _oldValue: Date[] = this._defaultRangeValue;
   private _value: Date[] = this._defaultRangeValue;
+
+  constructor(private _elementRef: ElementRef, private _cdr: ChangeDetectorRef) {
+    this._el = this._elementRef.nativeElement;
+  }
+
+  get showClearIcon(): boolean {
+    return this._isComplete() && !this.Disabled && this.AllowClear;
+  }
+
+  get ShowTime(): Partial<pgTimePickerInnerComponent> {
+    return this._showTime;
+  }
+
+  @Input()
+  set ShowTime(value: Partial<pgTimePickerInnerComponent>) {
+    if (typeof value === 'string' || typeof value === 'boolean') {
+      this._showTime = toBoolean(value) ? {} : null;
+    } else {
+      this._showTime = value;
+    }
+  }
+
+  get Disabled(): boolean {
+    return this._disabled;
+  }
+
+  @Input()
+  set Disabled(value: boolean) {
+    this._disabled = toBoolean(value);
+    this._closeCalendar();
+  }
+
+  get Value(): Date[] {
+    return this._value || this._defaultRangeValue;
+  }
+
+  set Value(value: Date[]) {
+    this._updateValue(value);
+  }
+
+  get DisabledDate(): (value: Date) => boolean {
+    return this._disabledDate;
+  }
+
+  @Input()
+  set DisabledDate(value: (value: Date) => boolean) {
+    this._disabledDate = value;
+    this._bindDisabledDateToPart();
+  }
 
   // avoid reference types
   private get _defaultRangeValue(): Date[] {
@@ -59,81 +119,9 @@ export class pgRangePickerComponent implements ControlValueAccessor, OnInit {
     return moment(this._value[RangePart.End]);
   }
 
-  _part = RangePart; // provided to template
-  hoveringSelectValue: Date;
-  _open;
-  _disabledDate: (value: Date) => boolean;
-  _disabledDatePart: Array<(value: Date) => boolean> = [null, null];
-  _mode = ['month', 'month'];
-  _selectedMonth: number[] = [];
-  _selectedYear: number[] = [];
-  _selectedDate: number[] = [];
-  _showMonth = [this._now.month(), this._now.clone().add(1, 'month').month()];
-  _showYear = [this._now.year(), this._now.year()];
-  _yearPanel: string[][] = [];
-  _startDecade = new Array(2).fill(Math.floor(this._showYear[RangePart.Start] / 10) * 10);
-  _triggerWidth = 0;
-  _dropDownPosition = 'bottom';
-  _positions: ConnectionPositionPair[] = [...DEFAULT_DATEPICKER_POSITIONS];
-  _offsetX: number = 0;
-  @ViewChild(CdkConnectedOverlay) _cdkOverlay: CdkConnectedOverlay;
-  @ViewChild('trigger') trigger;
   onTouched: () => void = () => null;
+
   onChange: (value: Date[]) => void = () => null;
-  @Input() Size = '';
-  @Input() Format = 'YYYY-MM-DD';
-  @Input() AllowClear = true;
-
-  @ViewChildren(pgTimePickerInnerComponent) timePickerInner: QueryList<pgTimePickerInnerComponent>;
-
-  get showClearIcon(): boolean {
-    return this._isComplete() && !this.Disabled && this.AllowClear;
-  }
-
-  @Input()
-  set ShowTime(value: Partial<pgTimePickerInnerComponent>) {
-    if (typeof value === 'string' || typeof value === 'boolean') {
-      this._showTime = toBoolean(value) ? {} : null;
-    } else {
-      this._showTime = value;
-    }
-  }
-
-  get ShowTime(): Partial<pgTimePickerInnerComponent> {
-    return this._showTime;
-  }
-
-  @Input()
-  set Disabled(value: boolean) {
-    this._disabled = toBoolean(value);
-    this._closeCalendar();
-  }
-
-  get Disabled(): boolean {
-    return this._disabled;
-  }
-
-  get Value(): Date[] {
-    return this._value || this._defaultRangeValue;
-  }
-
-  set Value(value: Date[]) {
-    this._updateValue(value);
-  }
-
-  @Input()
-  set DisabledDate(value: (value: Date) => boolean) {
-    this._disabledDate = value;
-    this._bindDisabledDateToPart();
-  }
-
-  get DisabledDate(): (value: Date) => boolean {
-    return this._disabledDate;
-  }
-
-  constructor(private _elementRef: ElementRef, private _cdr: ChangeDetectorRef) {
-    this._el = this._elementRef.nativeElement;
-  }
 
   ngOnInit(): void {
     this._generateYearPanel();
@@ -175,7 +163,7 @@ export class pgRangePickerComponent implements ControlValueAccessor, OnInit {
       return;
     }
     if (this._isComplete()) {
-        this._onChange();
+      this._onChange();
     } else {
       this._value = [...this._oldValue];
     }

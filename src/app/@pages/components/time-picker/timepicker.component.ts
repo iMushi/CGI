@@ -1,11 +1,5 @@
 import { ConnectedOverlayPositionChange, ConnectionPositionPair } from '@angular/cdk/overlay';
-import {
-  forwardRef,
-  Component,
-  Input,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, forwardRef, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 import { dropDownAnimation } from '../../animations/dropdown-animations';
@@ -14,36 +8,35 @@ import { toBoolean } from '../util/convert';
 import { pgTimePickerInnerComponent } from './timepicker-inner.component';
 
 @Component({
-  selector     : 'pg-timepicker',
+  selector: 'pg-timepicker',
   encapsulation: ViewEncapsulation.None,
-  animations   : [
+  animations: [
     dropDownAnimation
   ],
-  templateUrl     : "timepicker.component.html",
-  providers    : [
+  templateUrl: "timepicker.component.html",
+  providers: [
     {
-      provide    : NG_VALUE_ACCESSOR,
+      provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => pgTimePickerComponent),
-      multi      : true
+      multi: true
     }
   ],
-  styleUrls    : ['./timepicker.scss']
+  styleUrls: ['./timepicker.scss']
 })
 export class pgTimePickerComponent extends pgTimePickerInnerComponent {
-  private _timePickerDisabled = false;
   _dropDownPosition = 'bottom';
-  _positions: ConnectionPositionPair[] = [ ...DEFAULT_DATEPICKER_POSITIONS ];
-
+  _positions: ConnectionPositionPair[] = [...DEFAULT_DATEPICKER_POSITIONS];
   @ViewChild('trigger') trigger;
+  private _timePickerDisabled = false;
+
+  get Disabled(): boolean {
+    return this._timePickerDisabled;
+  }
 
   @Input()
   set Disabled(value: boolean) {
     this._timePickerDisabled = toBoolean(value);
     this._closeCalendar();
-  }
-
-  get Disabled(): boolean {
-    return this._timePickerDisabled;
   }
 
   onPositionChange(position: ConnectedOverlayPositionChange): void {

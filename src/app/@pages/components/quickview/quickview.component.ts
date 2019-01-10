@@ -1,10 +1,10 @@
-import { Component, OnInit,OnDestroy,ViewEncapsulation,ViewChild,ElementRef } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
-import { pagesToggleService} from '../../services/toggler.service';
-import {QuickviewService} from './quickview.service';
-import {Note} from './note';
-import {chatMessage,chatHistory} from './message';
+import { pagesToggleService } from '../../services/toggler.service';
+import { QuickviewService } from './quickview.service';
+import { Note } from './note';
+import { chatHistory, chatMessage } from './message';
 
 @Component({
   selector: 'app-quickview',
@@ -12,39 +12,43 @@ import {chatMessage,chatHistory} from './message';
   styleUrls: ['./quickview.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class QuickviewComponent implements OnInit,OnDestroy {
+export class QuickviewComponent implements OnInit, OnDestroy {
   subscriptions: Array<Subscription> = [];
-  isOpen:boolean = false;
+  isOpen: boolean = false;
   noteList = [];
-  noteDeleteList = []
+  noteDeleteList = [];
   //Single
-  selectedNote:Note;
+  selectedNote: Note;
   noteText = "";
   //List for deleting or CRUD functions
-  deleteNoteMode:boolean = false;
+  deleteNoteMode: boolean = false;
   isNoteOpen = false;
   userList = [];
-  chatHistory:chatHistory;
+  chatHistory: chatHistory;
   userMessage;
-  newMessage:chatMessage;
+  newMessage: chatMessage;
 
   @ViewChild('chatHistoryWrapper') chatHistoryWrapper: ElementRef;
 
-  constructor(private _service: QuickviewService, private http: HttpClient, private toggler:pagesToggleService) {
-    this.subscriptions.push(this.toggler.quickViewToggle.subscribe(message => { this.toggle() }));
+  constructor(private _service: QuickviewService, private http: HttpClient, private toggler: pagesToggleService) {
+    this.subscriptions.push(this.toggler.quickViewToggle.subscribe(message => {
+      this.toggle()
+    }));
   }
+
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
-    for(const sub of this.subscriptions){
+    for (const sub of this.subscriptions) {
       sub.unsubscribe();
     }
   }
+
   ngOnInit() {
     // Retrieve posts from the API
     this.subscriptions.push(this._service.getNotes().subscribe(notes => {
       this.noteList = notes;
     }));
-  
+
     this.subscriptions.push(this._service.getUsers().subscribe(users => {
       this.userList = users;
     }));
@@ -53,79 +57,79 @@ export class QuickviewComponent implements OnInit,OnDestroy {
       this.chatHistory = messages;
     }));
   }
-   toggle() {
-    if(this.isOpen){
-    	this.isOpen = false
-    }
-    else{
-    	this.isOpen = true;
+
+  toggle() {
+    if (this.isOpen) {
+      this.isOpen = false
+    } else {
+      this.isOpen = true;
     }
   }
 
-  popNote(item:Note):void{
+  popNote(item: Note): void {
     const index = this.noteDeleteList.indexOf(item);
     if (index !== -1) {
       this.noteDeleteList.splice(index, 1);
     }
   }
 
-  pushNote(item:Note):void{
+  pushNote(item: Note): void {
     this.noteDeleteList.push(item);
   }
 
   onSelectNote(item: Note): void {
-    if(!this.deleteNoteMode){
+    if (!this.deleteNoteMode) {
       this.selectedNote = item;
-      this.noteText = this.selectedNote.notes
+      this.noteText = this.selectedNote.notes;
       this.isNoteOpen = true;
     }
-    
+
   }
-  toggleNotesView():void{
-    if(this.isNoteOpen){
+
+  toggleNotesView(): void {
+    if (this.isNoteOpen) {
       this.isNoteOpen = false;
       this.saveNote()
-    }
-    else
+    } else
       this.isNoteOpen = true;
   }
 
-  onCheck(e,item:Note):void{
-    if(e.target.checked){
+  onCheck(e, item: Note): void {
+    if (e.target.checked) {
       this.pushNote(item);
-    }else{
+    } else {
       this.popNote(item);
     }
   }
 
-  composeNote():void{
+  composeNote(): void {
     this.isNoteOpen = true;
     this.selectedNote = new Note;
     this.selectedNote.id = this.noteList.length + 1;
-    this.selectedNote.date =  new Date();
+    this.selectedNote.date = new Date();
     this.selectedNote.notes = "";
     this.noteText = "";
     this.noteList.push(this.selectedNote);
   }
 
-  saveNote():void{
+  saveNote(): void {
     this.selectedNote.notes = this.noteText;
   }
 
-  deleteMode():void{
-    if(this.deleteNoteMode)
+  deleteMode(): void {
+    if (this.deleteNoteMode)
       this.deleteNoteMode = false;
     else
       this.deleteNoteMode = true;
   }
 
-  deleteNote():void{
-    this.noteList = this.noteList.filter(item => this.noteDeleteList.indexOf(item)  === -1);
+  deleteNote(): void {
+    this.noteList = this.noteList.filter(item => this.noteDeleteList.indexOf(item) === -1);
   }
 
-  onMessageKeyPress(event){
+  onMessageKeyPress(event) {
     if (event.keyCode == 13) {
-      if(this.userMessage){
+      if (this.userMessage) {
         this.newMessage = new chatMessage;
         this.newMessage.from = "me";
         this.newMessage.date = "";

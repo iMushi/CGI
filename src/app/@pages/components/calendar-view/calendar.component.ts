@@ -2,21 +2,10 @@
 Author : NG-ZORRO
 Profile : https://github.com/NG-ZORRO
 Repository : https://github.com/NG-ZORRO/ng-zorro-antd
-version : 
+version :
 Modifed : Yes
 */
-import {
-  Component,
-  ContentChild,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnInit,
-  Output,
-  TemplateRef,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
 
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -54,20 +43,14 @@ export interface WeekInterface {
 export enum RangePart { Start = 0, End = 1 }
 
 @Component({
-  selector     : 'pg-calendar-view',
+  selector: 'pg-calendar-view',
   encapsulation: ViewEncapsulation.None,
-  templateUrl:'calendar.component.html',
-  styleUrls    : [
+  templateUrl: 'calendar.component.html',
+  styleUrls: [
     'calendar.scss'
   ]
 })
 export class pgCalendarViewComponent implements OnInit {
-  private _clearTime = true;
-  private _datePicker = false;
-  private _fullScreen = true;
-  private _showHeader = true;
-  private _isRange = false;
-
   _el: HTMLElement;
   _weeksCalendar: WeekInterface[] = [];
   _quartersCalendar: QuartersType[] = [];
@@ -85,16 +68,19 @@ export class pgCalendarViewComponent implements OnInit {
   _locale = 'en';
   @ContentChild('dateCell') dateCell: TemplateRef<void>;
   @ContentChild('monthCell') monthCell: TemplateRef<void>;
-
   @Output() ClickDay: EventEmitter<DayInterface> = new EventEmitter();
   @Output() ClickMonth: EventEmitter<MonthInterface> = new EventEmitter();
   @Output() HoverDay: EventEmitter<DayInterface> = new EventEmitter();
   @Input() ClearTime = true;
   @Input() Mode = 'month';
+  private _clearTime = true;
+  private _datePicker = false;
+  private _fullScreen = true;
+  private _showHeader = true;
+  private _isRange = false;
 
-  @Input()
-  set FullScreen(value: boolean) {
-    this._fullScreen = toBoolean(value);
+  constructor(private _elementRef: ElementRef) {
+    this._el = this._elementRef.nativeElement;
   }
 
   get FullScreen(): boolean {
@@ -102,8 +88,8 @@ export class pgCalendarViewComponent implements OnInit {
   }
 
   @Input()
-  set ShowHeader(value: boolean) {
-    this._showHeader = toBoolean(value);
+  set FullScreen(value: boolean) {
+    this._fullScreen = toBoolean(value);
   }
 
   get ShowHeader(): boolean {
@@ -111,12 +97,21 @@ export class pgCalendarViewComponent implements OnInit {
   }
 
   @Input()
-  set IsRange(value: boolean) {
-    this._isRange = toBoolean(value);
+  set ShowHeader(value: boolean) {
+    this._showHeader = toBoolean(value);
   }
 
   get IsRange(): boolean {
     return this._isRange;
+  }
+
+  @Input()
+  set IsRange(value: boolean) {
+    this._isRange = toBoolean(value);
+  }
+
+  get DisabledDate(): (value: Date) => boolean {
+    return this._disabledDate;
   }
 
   @Input()
@@ -125,8 +120,8 @@ export class pgCalendarViewComponent implements OnInit {
     this._buildCalendar();
   }
 
-  get DisabledDate(): (value: Date) => boolean {
-    return this._disabledDate;
+  get DatePicker(): boolean {
+    return this._datePicker;
   }
 
   @Input()
@@ -135,8 +130,8 @@ export class pgCalendarViewComponent implements OnInit {
     this._datePicker = toBoolean(value);
   }
 
-  get DatePicker(): boolean {
-    return this._datePicker;
+  get Value(): Date {
+    return this._value || new Date();
   }
 
   @Input()
@@ -148,10 +143,6 @@ export class pgCalendarViewComponent implements OnInit {
     this._showMonth = moment(this._value).month();
     this._showYear = moment(this._value).year();
     this._buildCalendar();
-  }
-
-  get Value(): Date {
-    return this._value || new Date();
   }
 
   @Input()
@@ -177,19 +168,13 @@ export class pgCalendarViewComponent implements OnInit {
     this._buildCalendar();
   }
 
-  @Input()
-  set ShowYear(value: number) {
-    this._showYear = value;
-    this._buildCalendar();
-  }
-
   get ShowYear(): number {
     return this._showYear;
   }
 
   @Input()
-  set ShowMonth(value: number) {
-    this._showMonth = value;
+  set ShowYear(value: number) {
+    this._showYear = value;
     this._buildCalendar();
   }
 
@@ -198,13 +183,19 @@ export class pgCalendarViewComponent implements OnInit {
   }
 
   @Input()
-  set Locale(value: string) {
-    this._locale = value;
-    moment.locale(this._locale);
+  set ShowMonth(value: number) {
+    this._showMonth = value;
+    this._buildCalendar();
   }
 
   get Locale(): string {
     return this._locale;
+  }
+
+  @Input()
+  set Locale(value: string) {
+    this._locale = value;
+    moment.locale(this._locale);
   }
 
   _removeTime(date: Moment): Moment {
@@ -281,7 +272,7 @@ export class pgCalendarViewComponent implements OnInit {
     let monthIndex = date.month();
     let count = 0;
     while (!done) {
-      weeks.push({ days: this._buildWeek(date.clone(), month) });
+      weeks.push({days: this._buildWeek(date.clone(), month)});
       date.add(1, 'w');
       done = count++ > 4;
       monthIndex = date.month();
@@ -294,17 +285,17 @@ export class pgCalendarViewComponent implements OnInit {
     const days: DayInterface[] = [];
     for (let i = 0; i < 7; i++) {
       days.push({
-        number       : date.date(),
-        isLastMonth  : date.month() < month.month(),
-        isNextMonth  : date.month() > month.month(),
-        isCurrentDay : date.isSame(new Date(), 'day'),
+        number: date.date(),
+        isLastMonth: date.month() < month.month(),
+        isNextMonth: date.month() > month.month(),
+        isCurrentDay: date.isSame(new Date(), 'day'),
         isSelectedDay: this._isSelectedDay(date, month),
-        isInRange    : this._isInRange(date, month),
-        title        : date.format('YYYY-MM-DD'),
+        isInRange: this._isInRange(date, month),
+        title: date.format('YYYY-MM-DD'),
         date,
-        disabled     : this.DisabledDate && this.DisabledDate(date.toDate()),
+        disabled: this.DisabledDate && this.DisabledDate(date.toDate()),
         firstDisabled: this.DisabledDate && this.DisabledDate(date.toDate()) && (date.day() === 0 || (date.day() !== 0 && this.DisabledDate && !this.DisabledDate(date.clone().subtract(1, 'day').toDate()))),
-        lastDisabled : this.DisabledDate && this.DisabledDate(date.toDate()) && (date.day() === 6 || (date.day() !== 6 && this.DisabledDate && !this.DisabledDate(date.clone().add(1, 'day').toDate())))
+        lastDisabled: this.DisabledDate && this.DisabledDate(date.toDate()) && (date.day() === 6 || (date.day() !== 6 && this.DisabledDate && !this.DisabledDate(date.clone().add(1, 'day').toDate())))
       });
       date = date.clone();
       date.add(1, 'd');
@@ -317,12 +308,12 @@ export class pgCalendarViewComponent implements OnInit {
     let months: MonthInterface[] = [];
     for (let i = 0; i < 12; i++) {
       months.push({
-        index          : i,
-        name           : this._listOfMonthName[ i ],
-        year           : date.year(),
-        isCurrentMonth : moment(new Date()).month() === i && date.isSame(new Date(), 'year'),
+        index: i,
+        name: this._listOfMonthName[i],
+        year: date.year(),
+        isCurrentMonth: moment(new Date()).month() === i && date.isSame(new Date(), 'year'),
         isSelectedMonth: this._showMonth === i,
-        disabled       : this.DisabledDate && this.DisabledDate(date.month(i).toDate())
+        disabled: this.DisabledDate && this.DisabledDate(date.month(i).toDate())
       });
       if ((i + 1) % 3 === 0) {
         quarters.push(months);
@@ -349,10 +340,6 @@ export class pgCalendarViewComponent implements OnInit {
       listOfYears.push(i - 10 + year);
     }
     return listOfYears;
-  }
-
-  constructor(private _elementRef: ElementRef) {
-    this._el = this._elementRef.nativeElement;
   }
 
   ngOnInit(): void {
