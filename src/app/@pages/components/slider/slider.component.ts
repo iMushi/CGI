@@ -420,7 +420,7 @@ export class pgSliderComponent implements ControlValueAccessor, OnInit, OnChange
         map((position: number) => this.findClosestValue(position))
       );
       // end
-      source.end$ = fromEvent(document, end);
+      source.end$ = <any>fromEvent(document, end);
       // resolve move
       source.moveResolved$ = fromEvent(document, move).pipe(
         filter(filterFunc),

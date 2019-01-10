@@ -15,7 +15,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { HttpClient, HttpEventType, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
-import { Observable ,  Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ZipButtonOptions } from './interface';
 
 @Component({
@@ -199,7 +199,7 @@ export class pgUploadBtnComponent implements OnInit, OnChanges, OnDestroy {
     const {uid} = file;
     let {data} = opt;
     if (typeof data === 'function') {
-      data = data(file);
+      // data = data(file);
     }
     this.reqs[uid] = (opt.customRequest || this.xhr).call(this, {
       action: opt.action,

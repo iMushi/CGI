@@ -37,6 +37,7 @@ export class pgRangePickerComponent implements ControlValueAccessor, OnInit {
   _selectedYear: number[] = [];
   _selectedDate: number[] = [];
   _yearPanel: string[][] = [];
+  // @ts-ignore
   _startDecade = new Array(2).fill(Math.floor(this._showYear[RangePart.Start] / 10) * 10);
   _triggerWidth = 0;
   _dropDownPosition = 'bottom';

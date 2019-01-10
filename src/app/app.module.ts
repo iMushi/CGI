@@ -11,14 +11,7 @@ import { RouterModule } from '@angular/router';
 import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
 // Layouts
-import { BlankComponent
-  , CasualLayout
-  , CondensedComponent
-  , ConsultaComponent
-  , CorporateLayout
-  , ExecutiveLayout
-  , RootLayout
-  , SimplyWhiteLayout } from './@pages/layouts';
+import { BlankComponent, CasualLayout, CondensedComponent, ConsultaComponent, CorporateLayout, ExecutiveLayout, RootLayout, SimplyWhiteLayout } from './@pages/layouts';
 // Layout Service - Required
 import { pagesToggleService } from './@pages/services/toggler.service';
 // Shared Layout Components
@@ -53,29 +46,9 @@ import { ProgressModule } from './@pages/components/progress/progress.module';
 import { NvD3Module } from 'ngx-nvd3';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { IsotopeModule } from 'ngx-isotope';
-import { StepsformDirective } from './social/stepsform.directive';
 import { NgxDnDModule } from '@swimlane/ngx-dnd';
 import { QuillModule } from 'ngx-quill';
 import { PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-//Service - Demo content - Optional
-import { ChartService } from './charts/charts.service';
-import { SocialService } from './social/social.service';
-//Social Page - Optional
-import { SocialComponent } from './social/social.component';
-import { CoverpageDirective } from './social/coverpage.directive';
-//Demo Pages - Optional
-import { CardsComponentPage } from './cards/cards.component';
-import { ViewsPageComponent } from './views/views.component';
-import { ChartsComponent } from './charts/charts.component';
-//Dashboard Widgets - Optional
-import { DashboardModule } from './dashboard/dashboard.module';
-//Dashboards - Optional
-import { CondensedDashboardComponent } from './dashboard/condensed/dashboard.component';
-import { SimplyWhiteDashboardComponent } from './dashboard/simplywhite/dashboard.component';
-import { CasualDashboardComponent } from './dashboard/casual/dashboard.component';
-import { CorporateDashboardComponent } from './dashboard/corporate/dashboard.component';
-import { ExecutiveDashboardComponent } from './dashboard/executive/dashboard.component';
-//Sample Blank Pages - Optional
 import { BlankCorporateComponent } from './@pages/layouts/blank-corporate/blank-corporate.component';
 import { BlankSimplywhiteComponent } from './@pages/layouts/blank-simplywhite/blank-simplywhite.component';
 import { BlankCasualComponent } from './@pages/layouts/blank-casual/blank-casual.component';
@@ -106,17 +79,6 @@ export class AppHammerConfig extends HammerGestureConfig {
     SidebarComponent, QuickviewComponent, SearchOverlayComponent, HeaderComponent, HorizontalMenuComponent,
     BlankComponent,
     RootLayout,
-    CardsComponentPage,
-    ViewsPageComponent,
-    ChartsComponent,
-    SocialComponent,
-    StepsformDirective,
-    CoverpageDirective,
-    CondensedDashboardComponent,
-    SimplyWhiteDashboardComponent,
-    CasualDashboardComponent,
-    CorporateDashboardComponent,
-    ExecutiveDashboardComponent,
     BlankCorporateComponent,
     BlankSimplywhiteComponent,
     BlankCasualComponent,
@@ -154,10 +116,9 @@ export class AppHammerConfig extends HammerGestureConfig {
     QuillModule,
     PerfectScrollbarModule,
     pgSwitchModule,
-    DashboardModule,
     NgxSoapModule
   ],
-  providers: [QuickviewService, pagesToggleService, ChartService, SocialService, {
+  providers: [QuickviewService, pagesToggleService, {
     provide: PERFECT_SCROLLBAR_CONFIG,
     useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
   },

@@ -324,7 +324,7 @@ export class pgUploadComponent implements OnInit, OnChanges, OnDestroy {
     file.thumbUrl = '';
 
     const reader = new FileReader();
-    reader.onloadend = () => file.thumbUrl = reader.result;
+    reader.onloadend = () => file.thumbUrl = reader.result.toString();
     reader.readAsDataURL(file.originFileObj);
   }
 
